@@ -13,7 +13,10 @@ public class Field : MonoBehaviour
     
     private int _width = 64;
     private int _height = 64;
-        
+
+    private int _centerCoefficient = 2;
+    private float _sizeMultiplier = 0.85f;
+
     public int CardsCount => _activeCards.Count;
 
     [Inject]
@@ -43,9 +46,9 @@ public class Field : MonoBehaviour
         int childCount = container.childCount;
 
         if (targetIndex >= childCount - 1)
-            return false;        
+            return false;
 
-        Rect targetRect = GetWorldRect(targetCard.RectTransform);
+        Rect targetScreenRect = GetScreenRect(targetCard.RectTransform);
 
         for (int i = targetIndex + 1; i < childCount; i++)
         {
@@ -59,10 +62,12 @@ public class Field : MonoBehaviour
                 if (_activeCards.Contains(otherCard) == false)
                     continue;
 
-                Rect otherRect = GetWorldRect(otherCard.RectTransform);
+                Rect otherScreenRect = GetScreenRect(otherCard.RectTransform);
 
-                if (targetRect.Overlaps(otherRect))
-                    return true;                
+                if (targetScreenRect.Overlaps(otherScreenRect))
+                {
+                    return true;
+                }
             }
         }
 
@@ -88,8 +93,8 @@ public class Field : MonoBehaviour
             if (uiPos.y + _height > maxY) maxY = uiPos.y + _height;
         }
 
-        float centerX = (minX + maxX) / 2f;
-        float centerY = (minY + maxY) / 2f;
+        float centerX = (minX + maxX) / _centerCoefficient;
+        float centerY = (minY + maxY) / _centerCoefficient;
         Vector2 centerOffset = new Vector2(centerX, centerY);
 
         foreach (var node in nodes)
@@ -120,19 +125,34 @@ public class Field : MonoBehaviour
         }
     }
 
-    private Rect GetWorldRect(RectTransform rectTransform)
+    private Rect GetScreenRect(RectTransform rectTransform)
     {
         Vector3[] corners = new Vector3[4];
-
+        
         rectTransform.GetWorldCorners(corners);
 
-        return new Rect(corners[0].x, corners[0].y, corners[2].x - corners[0].x, corners[2].y - corners[0].y);
+        Canvas canvas = rectTransform.GetComponentInParent<Canvas>();
+        Camera camera = (canvas.renderMode == RenderMode.ScreenSpaceOverlay) ? null : canvas.worldCamera;
+
+        Vector2 screenCorner0 = RectTransformUtility.WorldToScreenPoint(camera, corners[0]);
+        Vector2 screenCorner2 = RectTransformUtility.WorldToScreenPoint(camera, corners[2]);
+
+        float width = screenCorner2.x - screenCorner0.x;
+        float height = screenCorner2.y - screenCorner0.y;
+        
+        float newWidth = width * _sizeMultiplier;
+        float newHeight = height * _sizeMultiplier;
+
+        float offsetX = (width - newWidth) / _centerCoefficient;
+        float offsetY = (height - newHeight) / _centerCoefficient;
+
+        return new Rect(screenCorner0.x + offsetX, screenCorner0.y + offsetY, newWidth, newHeight);
     }
 
     private Vector2 GetCanvasPosition(CardNode node, float width, float height)
     {
-        float posX = node.GridPosition.x * (width * 0.5f);
-        float posY = node.GridPosition.y * (height * 0.5f);
+        float posX = node.GridPosition.x * (width / _centerCoefficient);
+        float posY = node.GridPosition.y * (height / _centerCoefficient);
 
         return new Vector2(posX, posY);
     }

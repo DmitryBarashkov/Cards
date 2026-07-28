@@ -6,27 +6,29 @@ using Zenject;
 
 public class Bank : MonoBehaviour
 {
-    [SerializeField] private Transform _placeholder;
-
+    [SerializeField] private List<Transform> _cells;
+    
     [Inject] private LevelState _state;
+    [Inject] private InputService _input;
 
-    private List<Card> _cards = new();    
+    private List<Card> _cards = new();   
 
     private float _duration = 0.2f;
     private float _upScale = 1.25f;
     private float _downScale = 0.1f;
 
     private int _similarCount = 3;
+    private int _emptyCellIndex = 0;
 
     public int CardsCount => _cards.Count;
 
-    public Vector3 PlaceholderPosition => _placeholder.position;
+    public Transform PlaceholderTransform => _cells[_emptyCellIndex];
 
     public void AddNewCard(Card card)
     {
         _cards.Add(card);
         ClearSimilarCards();
-        _placeholder.SetSiblingIndex(_cards.Count);
+        _emptyCellIndex = _cards.Count;
     }
 
     private void ClearSimilarCards()
@@ -42,6 +44,8 @@ public class Bank : MonoBehaviour
                 Sequence mainSequence = DOTween.Sequence();
                 Card[] cardsToRemove = matchGroup.ToArray();
 
+                _input.Deactivate();
+
                 foreach (Card card in cardsToRemove)
                 {
                     Transform cardTransform = card.transform;
@@ -54,10 +58,23 @@ public class Bank : MonoBehaviour
                     foreach (Card card in cardsToRemove)
                     {
                         _cards.Remove(card);
+                        _emptyCellIndex = 0;
                         Destroy(card.gameObject);
+
+                        if (_cards.Count > 0)
+                        {
+                            foreach (Card activeCard in _cards)
+                            {
+                                activeCard.transform.SetParent(_cells[_emptyCellIndex]);
+                                activeCard.transform.localPosition = Vector3.zero;
+                                _emptyCellIndex++;
+                            }
+                        }
                     }
 
                     _state.CardsCount.Value -= _similarCount;
+
+                    _input.Activate();
                 });
             }
         }

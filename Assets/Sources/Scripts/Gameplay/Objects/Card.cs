@@ -61,11 +61,11 @@ public class Card : UIButton
 
         _input.Deactivate();
 
-        _rectTransform.DOMove(_bank.PlaceholderPosition, _duration)
+        _rectTransform.DOMove(_bank.PlaceholderTransform.position, _duration)
             .SetEase(Ease.OutQuad)
             .OnComplete(() => {
-                _rectTransform.SetParent(_bank.transform);
                 _bank.AddNewCard(this);
+                _rectTransform.SetParent(_bank.PlaceholderTransform);
                 _input.Activate();
                 _inBank = true;
             });

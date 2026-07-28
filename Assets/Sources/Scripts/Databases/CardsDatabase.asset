@@ -15,16 +15,25 @@ MonoBehaviour:
   cardTypes:
   - id: 0
     color: {r: 0.990566, g: 0.990566, b: 0.990566, a: 1}
-    sprite: {fileID: 21300000, guid: ce47720b4cf561d42a4e218d26468f2a, type: 3}
+    sprite: {fileID: 21300000, guid: 69ec5f66332d1e843b0bf368c0bb14c0, type: 3}
   - id: 1
     color: {r: 1, g: 1, b: 1, a: 1}
-    sprite: {fileID: 21300000, guid: d6258bba44b6bca4980db06c1e05e510, type: 3}
+    sprite: {fileID: 21300000, guid: 717ef7366d128154a88e708c4129bdc2, type: 3}
   - id: 2
     color: {r: 1, g: 1, b: 1, a: 1}
-    sprite: {fileID: 21300000, guid: 1cba3b2c12d8cd748b2c667241858833, type: 3}
+    sprite: {fileID: 21300000, guid: 52e5b814ed558034496a7b117f22f691, type: 3}
   - id: 3
     color: {r: 1, g: 1, b: 1, a: 1}
-    sprite: {fileID: 21300000, guid: f5383ccf7183bfa40aeb9e7b23175c1f, type: 3}
+    sprite: {fileID: 21300000, guid: 63803df135b6e8241931223df8ebcd45, type: 3}
   - id: 4
     color: {r: 1, g: 1, b: 1, a: 1}
-    sprite: {fileID: 21300000, guid: 2702da30f93c4be4bba7a6358bd39df3, type: 3}
+    sprite: {fileID: 21300000, guid: e5fb8f4f400a0f44fb0515edc8647005, type: 3}
+  - id: 5
+    color: {r: 1, g: 1, b: 1, a: 1}
+    sprite: {fileID: 21300000, guid: e6a80ab6b1535724b96ebd1bff097372, type: 3}
+  - id: 6
+    color: {r: 1, g: 1, b: 1, a: 1}
+    sprite: {fileID: 21300000, guid: 61d5315d632756f449030626dfdd395d, type: 3}
+  - id: 7
+    color: {r: 1, g: 1, b: 1, a: 1}
+    sprite: {fileID: 21300000, guid: 597d71a7b92014f46938d5ccc79d4765, type: 3}
