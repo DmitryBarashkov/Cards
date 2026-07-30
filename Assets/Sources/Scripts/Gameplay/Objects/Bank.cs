@@ -1,4 +1,5 @@
 using DG.Tweening;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -10,6 +11,7 @@ public class Bank : MonoBehaviour
     
     [Inject] private LevelState _state;
     [Inject] private InputService _input;
+    [Inject] private Field _field;
 
     private List<Card> _cards = new();   
 
@@ -18,6 +20,7 @@ public class Bank : MonoBehaviour
     private float _downScale = 0.1f;
 
     private int _similarCount = 3;
+    private int _minCleanCount = 3;
     private int _emptyCellIndex = 0;
 
     public int CardsCount => _cards.Count;
@@ -29,6 +32,27 @@ public class Bank : MonoBehaviour
         _cards.Add(card);
         ClearSimilarCards();
         _emptyCellIndex = _cards.Count;
+    }
+
+    public void Clear()
+    {
+        foreach (Card card in _cards)
+            Destroy(card.gameObject);
+        
+        _cards.Clear();
+        _emptyCellIndex = 0;
+    }
+
+    public void PartialClean()
+    {
+        if (_cards.Count < _minCleanCount)
+            return;
+
+        for (int i = 0; i < _minCleanCount; i++)
+            _field.MoveToClearContainer(_cards[i]);        
+
+        _cards.RemoveRange(0, _minCleanCount);
+        _emptyCellIndex -= _minCleanCount;
     }
 
     private void ClearSimilarCards()
@@ -44,8 +68,6 @@ public class Bank : MonoBehaviour
                 Sequence mainSequence = DOTween.Sequence();
                 Card[] cardsToRemove = matchGroup.ToArray();
 
-                _input.Deactivate();
-
                 foreach (Card card in cardsToRemove)
                 {
                     Transform cardTransform = card.transform;
@@ -54,7 +76,8 @@ public class Bank : MonoBehaviour
                     mainSequence.Insert(_duration, cardTransform.DOScale(_downScale, _duration).SetEase(Ease.InQuad));
                 }
 
-                mainSequence.OnComplete(() => {
+                mainSequence.OnComplete(() =>
+                {
                     foreach (Card card in cardsToRemove)
                     {
                         _cards.Remove(card);
@@ -77,6 +100,10 @@ public class Bank : MonoBehaviour
                     _input.Activate();
                 });
             }
+            else
+                _input.Activate();
         }
+        else 
+            _input.Activate();
     }
 }

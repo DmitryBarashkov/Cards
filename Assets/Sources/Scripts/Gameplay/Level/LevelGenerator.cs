@@ -15,6 +15,8 @@ public class LevelGenerator
     private CardNode[,,] _levelGrid;
     private int tripletInt = 3;
 
+    private List<CardNode> _generatedCards;
+
     [Inject]
     public void Construct(int totalTriplets, int uniqueTypes, int bankSize, int gridWidth, int gridHeight, int maxLayers)
     {
@@ -27,15 +29,15 @@ public class LevelGenerator
         _maxLayers = maxLayers;
     }
 
-    public List<CardNode> GenerateLevel()
+    public List<CardNode> Generate()
     {
         int totalCards = _totalTriplets * tripletInt;
         _levelGrid = new CardNode[_gridWidth, _gridHeight, _maxLayers];
+        _generatedCards = new List<CardNode>();
                 
         List<int> cardPool = CreateCardPool();
-        List<CardNode> generatedCards = new List<CardNode>();
         List<int> reverseBank = new List<int>();
-
+                
         while (cardPool.Count > 0 || reverseBank.Count > 0)
         {
             if (reverseBank.Count <= _bankSize - tripletInt && cardPool.Count >= tripletInt)
@@ -68,7 +70,7 @@ public class LevelGenerator
                 };
 
                 _levelGrid[pos.x, pos.y, pos.z] = newNode;
-                generatedCards.Add(newNode);
+                _generatedCards.Add(newNode);
 
                 reverseBank.RemoveAt(cardIndexToPlace);
             }
@@ -79,7 +81,12 @@ public class LevelGenerator
             }
         }
 
-        return generatedCards;
+        return _generatedCards;
+    }
+
+    public List<CardNode> GetInitialNodes()
+    {
+        return _generatedCards;
     }
 
     private List<int> CreateCardPool()

@@ -1,3 +1,5 @@
+using DG.Tweening;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
@@ -5,6 +7,8 @@ using static CardsDatabase;
 
 public class Field : MonoBehaviour
 {
+    [SerializeField] private ClearContainer _clearContainer;
+    
     private CardsDatabase _database;
     private CardFactory _factory;
     private LevelGenerator _levelGenerator;
@@ -17,6 +21,9 @@ public class Field : MonoBehaviour
     private int _centerCoefficient = 2;
     private float _sizeMultiplier = 0.85f;
 
+    private float _shuffleDuration = 0.5f;
+    private Ease _shuffleEaseType = Ease.OutQuad;
+
     public int CardsCount => _activeCards.Count;
 
     [Inject]
@@ -26,7 +33,7 @@ public class Field : MonoBehaviour
         _levelGenerator = levelGenerator;
         _factory = factory;
 
-        Initialize();
+        Initialize(_levelGenerator.Generate());
     }
 
     public void AddCard(Card card)
@@ -37,6 +44,9 @@ public class Field : MonoBehaviour
     public void DeleteCard(Card card)
     {
         _activeCards.Remove(card);
+
+        if (card.IsCleared)
+            _clearContainer.DeleteCard(card);
     }
 
     public bool IsCardOverlapped(Card targetCard)
@@ -74,10 +84,10 @@ public class Field : MonoBehaviour
         return false;
     }
 
-    private void Initialize()
+    public void Initialize(List<CardNode> nodes)
     {
-        var nodes = _levelGenerator.GenerateLevel();
-
+        ClearField();
+        
         float minX = float.MaxValue;
         float maxX = float.MinValue;
         float minY = float.MaxValue;
@@ -123,6 +133,66 @@ public class Field : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void ShuffleCards()
+    {
+        int childCount = transform.childCount - 1;
+        
+        if (childCount <= 1) 
+            return;
+
+        List<Transform> cards = new List<Transform>();
+        List<Vector3> positions = new List<Vector3>();
+        List<int> siblingIndices = new List<int>();
+
+        for (int i = 1; i <= childCount; i++)
+        {
+            Transform card = transform.GetChild(i);
+            
+            cards.Add(card);
+            positions.Add(card.localPosition);
+            siblingIndices.Add(card.GetSiblingIndex());
+        }
+
+        for (int i = childCount - 1; i > 0; i--)
+        {
+            int randomIndex = UnityEngine.Random.Range(0, i + 1);
+            Vector3 tempPos = positions[i];
+            
+            positions[i] = positions[randomIndex];
+            positions[randomIndex] = tempPos;
+
+            int tempIndex = siblingIndices[i];
+            
+            siblingIndices[i] = siblingIndices[randomIndex];
+            siblingIndices[randomIndex] = tempIndex;
+        }
+
+        for (int i = 0; i < childCount; i++)
+        {
+            Transform card = cards[i];
+
+            card.SetSiblingIndex(siblingIndices[i]);
+            card.DOLocalMove(positions[i], _shuffleDuration)
+                .SetEase(_shuffleEaseType);
+        }
+    }
+
+    public void MoveToClearContainer(Card card)
+    {
+        AddCard(card);
+
+         _clearContainer.AddNewCard(card);
+    }
+
+    private void ClearField()
+    {
+        foreach (var card in _activeCards)
+            Destroy(card.gameObject);
+
+        _activeCards.Clear();
+        _clearContainer.Clear();
     }
 
     private Rect GetScreenRect(RectTransform rectTransform)
