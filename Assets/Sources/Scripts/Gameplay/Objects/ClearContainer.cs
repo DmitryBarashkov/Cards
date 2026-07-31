@@ -31,11 +31,9 @@ public class ClearContainer : MonoBehaviour
     {
         ClearCell cell = card.transform.GetComponentInParent<ClearCell>();
         
-        if (cell.transform.childCount == 0)
+        if (cell.transform.childCount == 1)
             cell.SetEmpty(true);
 
-        card.SetUncleared();
-        
         _cards.Remove(card);
     }
 

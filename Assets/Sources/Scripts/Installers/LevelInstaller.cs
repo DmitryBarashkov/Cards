@@ -14,7 +14,7 @@ public class LevelInstaller : MonoInstaller
     [SerializeField] private int _maxLayers = 4;
 
     [Header("Карточки")]
-    [SerializeField] private Card _cardPrefab;
+    [SerializeField] private Card _cardPrefab;    
 
     public override void InstallBindings()
     {

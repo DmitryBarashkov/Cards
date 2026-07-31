@@ -76,3 +76,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _audioServicePrefab: {fileID: 1058407200004761399, guid: 01f04beca08063443a63150199bfbe92, type: 3}
   _cardsDatabase: {fileID: 11400000, guid: 798f829cda9f78b4f97fd0894636bdea, type: 2}
+  _gameplayCanvas: {fileID: 7286699065206105201, guid: 77516b0c6740a4447b9178f9a8133a1d, type: 3}

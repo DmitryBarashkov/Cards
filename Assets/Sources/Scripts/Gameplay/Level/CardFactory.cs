@@ -12,7 +12,7 @@ public class CardFactory
     {
         _container = container;
         _database = database;
-        _prefab = prefab;
+        _prefab = prefab;        
     }
 
     public Card Create(int id, Transform parent)
