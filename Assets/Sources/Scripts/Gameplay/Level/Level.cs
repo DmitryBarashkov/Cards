@@ -33,6 +33,11 @@ public class Level
         SetCardsCount();
     }
 
+    public void ShowLoseScreen()
+    {
+        throw new NotImplementedException();
+    }
+
     private void Initialize()
     {
         SetCardsCount();

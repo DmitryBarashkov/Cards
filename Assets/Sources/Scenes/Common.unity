@@ -1026,6 +1026,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _bankPrefab: {fileID: 6077934963625679421, guid: 3af38896ea5f5b142a2e1e03fa9d695b, type: 3}
   _fieldPrefab: {fileID: 6389005107029224742, guid: 66d858dd465a3854e95bd3ca8ac9d427, type: 3}
+  _winGameScreen: {fileID: 0}
+  _loseGameScreen: {fileID: 0}
+  _shopGameScreen: {fileID: 0}
+  _endGameContainer: {fileID: 0}
+  _shopContainer: {fileID: 0}
 --- !u!1 &1305320428
 GameObject:
   m_ObjectHideFlags: 0

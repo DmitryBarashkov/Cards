@@ -10,6 +10,7 @@ public class Bank : MonoBehaviour
     [SerializeField] private List<Transform> _cells;
     
     [Inject] private LevelState _state;
+    [Inject] private Level _level;
     [Inject] private InputService _input;
     [Inject] private Field _field;
 
@@ -24,7 +25,7 @@ public class Bank : MonoBehaviour
     private int _emptyCellIndex = 0;
 
     private int _maxCellIndex = 6;
-    private int _bankSize = 7;
+    private int _bankSize = 5;
     private int _bankMaxSize = 7;
 
     private Card _lastAddedCard;
@@ -44,7 +45,12 @@ public class Bank : MonoBehaviour
         {
             _emptyCellIndex++;
             _emptyCellIndex = Mathf.Min(_maxCellIndex, _emptyCellIndex);
-        }
+
+            if (this.IsFull)
+            {
+                _level.ShowLoseScreen();
+            }
+        }       
     }
 
     public void Clear()
