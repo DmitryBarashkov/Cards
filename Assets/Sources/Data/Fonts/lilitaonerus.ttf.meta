@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 06064fd2e4733ce40b4b75cd7645db82
+guid: 5b62747a6f9d8b547ac42b23e933d6d4
 TrueTypeFontImporter:
   externalObjects: {}
   serializedVersion: 4
@@ -9,7 +9,7 @@ TrueTypeFontImporter:
   characterPadding: 1
   includeFontData: 1
   fontNames:
-  - Lilita One
+  - Lilita One Rus
   fallbackFontReferences: []
   customCharacters: 
   fontRenderingMode: 0

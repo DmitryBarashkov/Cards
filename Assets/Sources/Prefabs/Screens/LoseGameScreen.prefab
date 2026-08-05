@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8110976745907312065}
   - component: {fileID: 1473728393722490956}
   - component: {fileID: 8390163985314899616}
+  - component: {fileID: 263413312780938833}
   m_Layer: 5
   m_Name: ClearButton
   m_TagString: Untagged
@@ -102,6 +103,23 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+--- !u!114 &263413312780938833
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 202644854529908230}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c659d7f8c7516614487231e215a79879, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _caption: {fileID: 0}
+  _icons: []
+  _screen: {fileID: 0}
+  _disabledTextColor: {r: 0, g: 0, b: 0, a: 0}
+  _disabledIconColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &205568030537631129
 GameObject:
   m_ObjectHideFlags: 0
@@ -368,6 +386,7 @@ GameObject:
   - component: {fileID: 500187763349145220}
   - component: {fileID: 5987836333140380003}
   - component: {fileID: 346126032875848112}
+  - component: {fileID: 8981254351253066251}
   m_Layer: 5
   m_Name: CloseButton
   m_TagString: Untagged
@@ -392,7 +411,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -25.7, y: -24.9}
+  m_AnchoredPosition: {x: -25, y: -25}
   m_SizeDelta: {x: 50, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &500187763349145220
@@ -477,6 +496,19 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &8981254351253066251
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 805325208339597548}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1da21ec4952097d498932d816f118ef1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _screen: {fileID: 6009157579841143623}
 --- !u!1 &934720011566636097
 GameObject:
   m_ObjectHideFlags: 0
@@ -490,7 +522,7 @@ GameObject:
   - component: {fileID: 6206363466158536211}
   - component: {fileID: 3955596942734325345}
   m_Layer: 5
-  m_Name: ShuffleText
+  m_Name: AddCellText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -543,10 +575,11 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u041F\u0435\u0440\u0435\u043C\u0435\u0448\u0430\u0442\u044C \n\u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0438"
+  m_text: "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u044F\u0447\u0435\u0439\u043A\u0443
+    \u0432 \u0431\u0430\u043D\u043A"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: b0e6ddf40b271154b9a350d5e30a9a73, type: 2}
-  m_sharedMaterial: {fileID: 5990506765652683374, guid: b0e6ddf40b271154b9a350d5e30a9a73, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 76d10dc8b0e3b204799793fc266a2e94, type: 2}
+  m_sharedMaterial: {fileID: -1552773881957620302, guid: 76d10dc8b0e3b204799793fc266a2e94, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -743,10 +776,12 @@ MonoBehaviour:
       it: 
       de: 
       hi: 
-  text: "\u041F\u0435\u0440\u0435\u043C\u0435\u0448\u0430\u0442\u044C \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0438"
-  ru: "\u041F\u0435\u0440\u0435\u043C\u0435\u0448\u0430\u0442\u044C \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0438"
-  en: Shuffle cards
-  tr: "Kartlar\u0131 kar\u0131\u015Ft\u0131r"
+  text: "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u044F\u0447\u0435\u0439\u043A\u0443
+    \u0432 \u0431\u0430\u043D\u043A"
+  ru: "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u044F\u0447\u0435\u0439\u043A\u0443
+    \u0432 \u0431\u0430\u043D\u043A"
+  en: Add a cell to the bank
+  tr: "Bankaya bir h\xFCcre ekleme"
   az: 
   be: 
   he: 
@@ -985,8 +1020,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: +1
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: b0e6ddf40b271154b9a350d5e30a9a73, type: 2}
-  m_sharedMaterial: {fileID: 5990506765652683374, guid: b0e6ddf40b271154b9a350d5e30a9a73, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 76d10dc8b0e3b204799793fc266a2e94, type: 2}
+  m_sharedMaterial: {fileID: -1552773881957620302, guid: 76d10dc8b0e3b204799793fc266a2e94, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1267,6 +1302,7 @@ GameObject:
   - component: {fileID: 3379527243832278761}
   - component: {fileID: 1400258403850978430}
   - component: {fileID: 7980548476628887113}
+  - component: {fileID: 4679643433025829256}
   m_Layer: 5
   m_Name: RestartLevelButton
   m_TagString: Untagged
@@ -1376,6 +1412,19 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &4679643433025829256
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2263118546106073274}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0eb8971a12aa034e95d9b19013f4da7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _screen: {fileID: 6009157579841143623}
 --- !u!1 &2433314835676420147
 GameObject:
   m_ObjectHideFlags: 0
@@ -1452,6 +1501,7 @@ GameObject:
   - component: {fileID: 8750218782089689913}
   - component: {fileID: 1236057460153354811}
   - component: {fileID: 840824119468385963}
+  - component: {fileID: 7900064610494186840}
   m_Layer: 5
   m_Name: CancelButton
   m_TagString: Untagged
@@ -1543,6 +1593,24 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+--- !u!114 &7900064610494186840
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2576893779191856687}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b596761161436446bbea9cba6a77c77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _caption: {fileID: 0}
+  _icons: []
+  _screen: {fileID: 0}
+  _disabledTextColor: {r: 0, g: 0, b: 0, a: 0}
+  _disabledIconColor: {r: 0, g: 0, b: 0, a: 0}
+  _addCount: 3
 --- !u!1 &2803441628006582414
 GameObject:
   m_ObjectHideFlags: 0
@@ -1675,8 +1743,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: +3
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: b0e6ddf40b271154b9a350d5e30a9a73, type: 2}
-  m_sharedMaterial: {fileID: 5990506765652683374, guid: b0e6ddf40b271154b9a350d5e30a9a73, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 76d10dc8b0e3b204799793fc266a2e94, type: 2}
+  m_sharedMaterial: {fileID: -1552773881957620302, guid: 76d10dc8b0e3b204799793fc266a2e94, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -2043,8 +2111,9 @@ GameObject:
   - component: {fileID: 8196994443699914728}
   - component: {fileID: 2172764942038517037}
   - component: {fileID: 793813649651686657}
+  - component: {fileID: 3215260373802280925}
   m_Layer: 5
-  m_Name: ShuffleButton
+  m_Name: AddCellButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2134,6 +2203,23 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+--- !u!114 &3215260373802280925
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5174746770291668805}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5d0b0efdb9ab8a4f8ed2964b6000bf8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _caption: {fileID: 0}
+  _icons: []
+  _screen: {fileID: 0}
+  _disabledTextColor: {r: 0, g: 0, b: 0, a: 0}
+  _disabledIconColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &5255386396804929983
 GameObject:
   m_ObjectHideFlags: 0
@@ -2341,8 +2427,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: +1
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: b0e6ddf40b271154b9a350d5e30a9a73, type: 2}
-  m_sharedMaterial: {fileID: 5990506765652683374, guid: b0e6ddf40b271154b9a350d5e30a9a73, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 76d10dc8b0e3b204799793fc266a2e94, type: 2}
+  m_sharedMaterial: {fileID: -1552773881957620302, guid: 76d10dc8b0e3b204799793fc266a2e94, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -2419,6 +2505,8 @@ GameObject:
   - component: {fileID: 7292105460120394878}
   - component: {fileID: 3044271067930267475}
   - component: {fileID: 4620792793604416646}
+  - component: {fileID: 5787585018191531658}
+  - component: {fileID: 1959870176079970019}
   m_Layer: 5
   m_Name: LoseGameScreen
   m_TagString: Untagged
@@ -2487,6 +2575,34 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &5787585018191531658
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6009157579841143623}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c7d5eebffec57f429a200da16b4f900, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _addCellButton: {fileID: 3215260373802280925}
+  _clearbutton: {fileID: 263413312780938833}
+  _cancelButton: {fileID: 7900064610494186840}
+  _text: {fileID: 6206363466158536211}
+--- !u!114 &1959870176079970019
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6009157579841143623}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 017f7fbab766d9740ad847d2ff9a6ac6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6251146755285830678
 GameObject:
   m_ObjectHideFlags: 0
@@ -2779,8 +2895,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "Tekrar ba\u015Flat"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: b0e6ddf40b271154b9a350d5e30a9a73, type: 2}
-  m_sharedMaterial: {fileID: 5990506765652683374, guid: b0e6ddf40b271154b9a350d5e30a9a73, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 76d10dc8b0e3b204799793fc266a2e94, type: 2}
+  m_sharedMaterial: {fileID: -1552773881957620302, guid: 76d10dc8b0e3b204799793fc266a2e94, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -3078,7 +3194,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: a28fee3d1336843688679fd3eaca6fe8, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 092e44a35907349e2a86f96de3584fe2, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -3157,8 +3273,8 @@ MonoBehaviour:
   m_text: "\u0423\u0431\u0440\u0430\u0442\u044C 3 \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0438
     \u0438\u0437 \u0431\u0430\u043D\u043A\u0430"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: b0e6ddf40b271154b9a350d5e30a9a73, type: 2}
-  m_sharedMaterial: {fileID: 5990506765652683374, guid: b0e6ddf40b271154b9a350d5e30a9a73, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 76d10dc8b0e3b204799793fc266a2e94, type: 2}
+  m_sharedMaterial: {fileID: -1552773881957620302, guid: 76d10dc8b0e3b204799793fc266a2e94, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -3355,10 +3471,12 @@ MonoBehaviour:
       it: 
       de: 
       hi: 
-  text: "\u041F\u0435\u0440\u0435\u043C\u0435\u0448\u0430\u0442\u044C \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0438"
-  ru: "\u041F\u0435\u0440\u0435\u043C\u0435\u0448\u0430\u0442\u044C \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0438"
-  en: Shuffle cards
-  tr: "Kartlar\u0131 kar\u0131\u015Ft\u0131r"
+  text: "\u0423\u0431\u0440\u0430\u0442\u044C 3 \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0438
+    \u0438\u0437 \u0431\u0430\u043D\u043A\u0430"
+  ru: "\u0423\u0431\u0440\u0430\u0442\u044C 3 \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0438
+    \u0438\u0437 \u0431\u0430\u043D\u043A\u0430"
+  en: Remove 3 cards from the bank
+  tr: "Bankadan 3 kart\u0131 \xE7\u0131kar\u0131n"
   az: 
   be: 
   he: 
@@ -3460,8 +3578,8 @@ MonoBehaviour:
   m_text: "\u0417\u0430\u043A\u043E\u043D\u0447\u0438\u043B\u043E\u0441\u044C \u0441\u0432\u043E\u0431\u043E\u0434\u043D\u043E\u0435
     \u043C\u0435\u0441\u0442\u043E"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: b0e6ddf40b271154b9a350d5e30a9a73, type: 2}
-  m_sharedMaterial: {fileID: 5990506765652683374, guid: b0e6ddf40b271154b9a350d5e30a9a73, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 76d10dc8b0e3b204799793fc266a2e94, type: 2}
+  m_sharedMaterial: {fileID: -1552773881957620302, guid: 76d10dc8b0e3b204799793fc266a2e94, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -3765,8 +3883,8 @@ MonoBehaviour:
   m_text: "\u041E\u0442\u043C\u0435\u043D\u0438\u0442\u044C \u043F\u043E\u0441\u043B\u0435\u0434\u043D\u0438\u0439
     \u0445\u043E\u0434"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: b0e6ddf40b271154b9a350d5e30a9a73, type: 2}
-  m_sharedMaterial: {fileID: 5990506765652683374, guid: b0e6ddf40b271154b9a350d5e30a9a73, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 76d10dc8b0e3b204799793fc266a2e94, type: 2}
+  m_sharedMaterial: {fileID: -1552773881957620302, guid: 76d10dc8b0e3b204799793fc266a2e94, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

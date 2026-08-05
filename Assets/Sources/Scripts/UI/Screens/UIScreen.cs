@@ -13,7 +13,10 @@ public class UIScreen : MonoBehaviour
         _gameObject = gameObject;
     }
 
-    public virtual void Setup() { }
+    public virtual void Setup() 
+    {
+        _gameObject.SetActive(true);
+    }
 
     public class Factory : PlaceholderFactory<Transform, GameObject, UIScreen> { }
 }

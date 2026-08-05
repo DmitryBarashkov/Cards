@@ -40,7 +40,7 @@ public class UIService
     {
         UIScreen targetPrefab = isWin ? _winScreenPrefab : _loseScreenPrefab;
         GameObject window = GetOrCreateWindow(targetPrefab, _endGameContainer);
-        UIScreen endGameScreen = window.GetComponent<EndGameScreen>();
+        UIScreen endGameScreen = window.GetComponent<UIScreen>();
 
         endGameScreen.Setup();
     }

@@ -17,6 +17,7 @@ public class GameInstaller : MonoInstaller
     [Header("Контейнеры для экранов")]
     [SerializeField] private Transform _endGameContainer;
     [SerializeField] private Transform _shopContainer;
+    [SerializeField] private GameplayContainer _gameplayContainer;
 
     private int _coins;
     private int _shuffles;
@@ -60,17 +61,17 @@ public class GameInstaller : MonoInstaller
 
     private void BindGameObjects()
     {
-        GameplayCanvas canvas = FindFirstObjectByType<GameplayCanvas>();
-
+        Container.Bind<GameplayContainer>().FromComponentInHierarchy().AsSingle();
+        
         Container.Bind<Bank>()
             .FromComponentInNewPrefab(_bankPrefab)
-            .UnderTransform(canvas.transform)
+            .UnderTransform(_gameplayContainer.transform)
             .AsSingle()
             .NonLazy();
 
         Container.Bind<Field>()
             .FromComponentInNewPrefab(_fieldPrefab)
-            .UnderTransform(canvas.transform)
+            .UnderTransform(_gameplayContainer.transform)
             .AsSingle()
             .NonLazy();
     }

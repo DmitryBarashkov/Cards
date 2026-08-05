@@ -33,6 +33,8 @@ public class Bank : MonoBehaviour
     public int CardsCount => _cards.Count;
 
     public bool IsFull => _cards.Count == _bankSize;
+        
+    public bool IsAllCellsEnabled => _bankSize == _bankMaxSize;
 
     public Transform PlaceholderTransform => _cells[_emptyCellIndex];
 
@@ -50,7 +52,11 @@ public class Bank : MonoBehaviour
             {
                 _level.ShowLoseScreen();
             }
-        }       
+        }  
+        else if (_field.CardsCount == 0 && _cards.Count == 0)
+        {
+            _level.ShowWinScreen();
+        }
     }
 
     public void Clear()
@@ -79,7 +85,10 @@ public class Bank : MonoBehaviour
     public void IncreaseBankSize()
     {
         if (_bankSize < _bankMaxSize)
+        {
             _bankSize++;
+            UpdateCellsIcons();
+        }
         else
             throw new ArgumentException("Нельзя увеличить банк выше максимума");
     }
@@ -174,5 +183,19 @@ public class Bank : MonoBehaviour
     private void ClearLastMove()
     {
         _lastAddedCard = null;        
+    }
+
+    private void UpdateCellsIcons()
+    {
+        foreach (var cell in _cells)
+        {
+            UnlockCellButton button = cell.GetComponentInChildren<UnlockCellButton>();
+
+            if (button != null)
+            {
+                button.gameObject.SetActive(false);
+                break;
+            }
+        }
     }
 }

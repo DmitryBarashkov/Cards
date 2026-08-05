@@ -12,7 +12,7 @@ public class Card : UIButton
     private InputService _input;
     private Field _field;
     private Bank _bank;
-    private GameplayCanvas _canvas;
+    private Transform _gameplayContainer;
         
     private int _id;
     private float _duration = 0.4f;
@@ -27,12 +27,12 @@ public class Card : UIButton
     public bool IsCleared => _isCleared;
 
     [Inject]
-    public void Construct(InputService input, Field field, Bank bank, GameplayCanvas canvas)
+    public void Construct(InputService input, Field field, Bank bank, GameplayContainer gameplayContainer)
     {
         _input = input;
         _field = field;
         _bank = bank;
-        _canvas = canvas;
+        _gameplayContainer = gameplayContainer.transform;
     }
     
     public override void HandleClick()
@@ -63,7 +63,7 @@ public class Card : UIButton
         if (_initialPosition == Vector3.zero)
             throw new ArgumentException("У карточки нет исходной позиции");
 
-        _rectTransform.SetParent(_canvas.transform);
+        _rectTransform.SetParent(_gameplayContainer.transform);
         
         _rectTransform.DOMove(_initialPosition, _duration)
             .SetEase(Ease.OutQuad)
@@ -93,7 +93,7 @@ public class Card : UIButton
         
         _input.Deactivate();
 
-        _rectTransform.SetParent(_canvas.transform);
+        _rectTransform.SetParent(_gameplayContainer.transform);
 
         _rectTransform.DOMove(_bank.PlaceholderTransform.position, _duration)
             .SetEase(Ease.OutQuad)
