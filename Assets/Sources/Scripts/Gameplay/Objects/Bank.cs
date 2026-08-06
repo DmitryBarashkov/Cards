@@ -1,4 +1,5 @@
 using DG.Tweening;
+using Cysharp.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,12 +39,14 @@ public class Bank : MonoBehaviour
 
     public Transform PlaceholderTransform => _cells[_emptyCellIndex];
 
-    public void AddNewCard(Card card)
+    public async void AddNewCard(Card card)
     {
         _cards.Add(card);
         _lastAddedCard = card;
 
-        if (TryClearSimilarCards() == false)
+        bool clearCardResult = await TryClearSimilarCards();
+
+        if (clearCardResult == false)
         {
             _emptyCellIndex++;
             _emptyCellIndex = Mathf.Min(_maxCellIndex, _emptyCellIndex);
@@ -52,11 +55,9 @@ public class Bank : MonoBehaviour
             {
                 _level.ShowLoseScreen();
             }
-        }  
+        } 
         else if (_field.CardsCount == 0 && _cards.Count == 0)
-        {
             _level.ShowWinScreen();
-        }
     }
 
     public void Clear()
@@ -111,59 +112,53 @@ public class Bank : MonoBehaviour
         ClearLastMove();
     }
 
-    private bool TryClearSimilarCards()
+    private async UniTask<bool> TryClearSimilarCards()
     {
-        if (_cards.Count >= _similarCount)
-        {
-            var matchGroup = _cards
-                .GroupBy(card => card.Id)
-                .FirstOrDefault(group => group.Count() >= _similarCount);
-
-            if (matchGroup != null)
-            {
-                Sequence mainSequence = DOTween.Sequence();
-                Card[] cardsToRemove = matchGroup.ToArray();
-
-                foreach (Card card in cardsToRemove)
-                {
-                    Transform cardTransform = card.transform;
-
-                    mainSequence.Insert(0, cardTransform.DOScale(_upScale, _duration).SetEase(Ease.OutBack));
-                    mainSequence.Insert(_duration, cardTransform.DOScale(_downScale, _duration).SetEase(Ease.InQuad));
-                }
-
-                mainSequence.OnComplete(() =>
-                {
-                    foreach (Card card in cardsToRemove)
-                    {
-                        _cards.Remove(card);
-                        Destroy(card.gameObject);
-                        
-                        _emptyCellIndex--;
-                        _emptyCellIndex = Mathf.Max(0, _emptyCellIndex);
-                    }                    
-
-                    if (_cards.Count > 0)
-                        SetCardsInCells();
-
-                    _state.CardsCount.Value -= _similarCount;
-
-                    _input.Activate();
-                });
-
-                return true;
-            }
-            else
-            {
-                _input.Activate();
-                return false;
-            }
-        }
-        else
+        if (_cards.Count < _similarCount)
         {
             _input.Activate();
             return false;
         }
+
+        var matchGroup = _cards
+            .GroupBy(card => card.Id)
+            .FirstOrDefault(group => group.Count() >= _similarCount);
+
+        if (matchGroup == null)
+        {
+            _input.Activate();
+            return false;
+        }
+
+        Sequence mainSequence = DOTween.Sequence();
+        Card[] cardsToRemove = matchGroup.ToArray();
+
+        foreach (Card card in cardsToRemove)
+        {
+            Transform cardTransform = card.transform;
+
+            mainSequence.Insert(0, cardTransform.DOScale(_upScale, _duration).SetEase(Ease.OutBack));
+            mainSequence.Insert(_duration, cardTransform.DOScale(_downScale, _duration).SetEase(Ease.InQuad));
+        }
+
+        await mainSequence.ToUniTask(cancellationToken: this.GetCancellationTokenOnDestroy());
+
+        foreach (Card card in cardsToRemove)
+        {
+            _cards.Remove(card);
+            Destroy(card.gameObject);
+                        
+            _emptyCellIndex--;
+            _emptyCellIndex = Mathf.Max(0, _emptyCellIndex);
+        }                    
+
+        if (_cards.Count > 0)
+            SetCardsInCells();
+
+        _state.CardsCount.Value -= _similarCount;
+        _input.Activate();
+
+        return true;        
     }
 
     private void SetCardsInCells()

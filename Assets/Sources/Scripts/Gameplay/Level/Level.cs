@@ -10,24 +10,27 @@ public class Level
     private UIService _service;
 
     private int _levelCardsCount;
+    private int _levelNumber;
     
     public int CardsCount => _levelCardsCount;    
 
     [Inject]
-    public void Construct(LevelState state, LevelGenerator generator, Field field, Bank bank, UIService service)
+    public void Construct(LevelState state, LevelGenerator generator, Field field, Bank bank, UIService service, int levelNumber)
     {
         _state = state;
         _field = field;
         _bank = bank;
         _generator = generator;
         _service = service;
+        _levelNumber = levelNumber;
 
         Initialize();
     }
 
-    public void SetCardsCount()
+    public void SetLevelState()
     {
         _state.CardsCount.Value = _levelCardsCount = _field.CardsCount + _bank.CardsCount;
+        _state.LevelNumber.Value = _levelNumber;
     }
 
     public void Restart()
@@ -36,7 +39,7 @@ public class Level
 
         _bank.Clear();
         _field.Initialize(nodes);
-        SetCardsCount();
+        SetLevelState();
     }
 
     public void ShowLoseScreen()
@@ -51,6 +54,6 @@ public class Level
 
     private void Initialize()
     {
-        SetCardsCount();
+        SetLevelState();
     }
 }

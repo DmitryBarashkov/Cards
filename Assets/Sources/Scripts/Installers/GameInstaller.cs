@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using YG;
 using Zenject;
@@ -56,7 +55,10 @@ public class GameInstaller : MonoInstaller
     private void BindLevel()
     {
         Container.Bind<LevelState>().AsSingle().NonLazy();
-        Container.Bind<Level>().AsSingle().NonLazy();
+        Container.Bind<Level>()
+            .AsSingle()
+            .WithArguments(YG2.saves.level)
+            .NonLazy();
     }
 
     private void BindGameObjects()
