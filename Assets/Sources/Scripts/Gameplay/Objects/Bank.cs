@@ -32,11 +32,10 @@ public class Bank : MonoBehaviour
     private Card _lastAddedCard;
 
     public int CardsCount => _cards.Count;
-
     public bool IsFull => _cards.Count == _bankSize;
-        
+    public bool CanUseCleaning => _cards.Count >= _minCleanCount;
+    public bool CanUseCancel => _lastAddedCard != null;
     public bool IsAllCellsEnabled => _bankSize == _bankMaxSize;
-
     public Transform PlaceholderTransform => _cells[_emptyCellIndex];
 
     public async void AddNewCard(Card card)
@@ -52,9 +51,7 @@ public class Bank : MonoBehaviour
             _emptyCellIndex = Mathf.Min(_maxCellIndex, _emptyCellIndex);
 
             if (this.IsFull)
-            {
-                _level.ShowLoseScreen();
-            }
+                _level.ShowLoseScreen();            
         } 
         else if (_field.CardsCount == 0 && _cards.Count == 0)
             _level.ShowWinScreen();
@@ -72,9 +69,6 @@ public class Bank : MonoBehaviour
 
     public void PartialClean()
     {
-        if (_cards.Count < _minCleanCount)
-            return;
-
         for (int i = 0; i < _minCleanCount; i++)
             _field.MoveToClearContainer(_cards[i]);        
 
@@ -96,9 +90,6 @@ public class Bank : MonoBehaviour
 
     public void CancelMove()
     {
-        if (_lastAddedCard == null)
-            return;
-
         _cards.Remove(_lastAddedCard);
 
         if (_emptyCellIndex != _maxCellIndex)
@@ -150,7 +141,7 @@ public class Bank : MonoBehaviour
                         
             _emptyCellIndex--;
             _emptyCellIndex = Mathf.Max(0, _emptyCellIndex);
-        }                    
+        }                
 
         if (_cards.Count > 0)
             SetCardsInCells();

@@ -1,14 +1,12 @@
 using UnityEngine;
 using YG;
-using Zenject;
 
-public class AddCancelButton : EndScreenButton
+public class AddCoinsButton : ToggleButton
 {
-    [SerializeField] private int _addCount = 3;
-    
-    [Inject] private PlayerStats _playerStats;
+    [SerializeField] private WinGameScreen _winScreen;
 
-    private string _rewardId = "AddCancel";
+    private string _rewardId = "MultiplyCoins";
+    private int _coinsFactor = 2;
 
     public override void HandleClick()
     {
@@ -17,9 +15,7 @@ public class AddCancelButton : EndScreenButton
 
         YG2.RewardedAdvShow(_rewardId, () =>
         {
-
-            YG2.saves.cancels += _addCount;
-            _playerStats.currentCleanings.Value += _addCount;
+            _winScreen.AddCoins(_coinsFactor);
             _audioService.Activate();
         });
 

@@ -4,7 +4,7 @@ using UnityEngine;
 using YG;
 using Zenject;
 
-public class AddClearButton : EndScreenButton
+public class AddClearButton : ToggleButton
 {
     [Inject] private PlayerStats _playerStats;
 

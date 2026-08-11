@@ -9,6 +9,7 @@ public class UIService
     private UIScreen _winScreenPrefab;
     private UIScreen _loseScreenPrefab;
     private UIScreen _shopScreenPrefab;
+    private UIScreen _buyScreenPrefab;
 
     private Transform _endGameContainer;
     private Transform _shopContainer;
@@ -17,13 +18,14 @@ public class UIService
 
     [Inject]
     public void Construct(DiContainer container, UIScreen winScreenPrefab, UIScreen loseScreenPrefab,
-                     [Inject(Optional = true)] UIScreen shopScreenPrefab,
+                     [Inject(Optional = true)] UIScreen shopScreenPrefab, [Inject(Optional = true)] UIScreen buyGameScreen,
                      Transform endGameContainer, Transform shopContainer)
     {
         _container = container;
         _winScreenPrefab = winScreenPrefab;
         _loseScreenPrefab = loseScreenPrefab;
         _shopScreenPrefab = shopScreenPrefab;
+        _buyScreenPrefab = buyGameScreen;
         _endGameContainer = endGameContainer;
         _shopContainer = shopContainer;
     }
@@ -33,6 +35,15 @@ public class UIService
         GameObject shop = GetOrCreateWindow(_shopScreenPrefab, _shopContainer);
         ShopScreen screen = shop.GetComponent<ShopScreen>();
 
+        screen.Setup();
+    }
+
+    public void ShowBuyScreen(ControlType type, int price)
+    {
+        GameObject buyScreen = GetOrCreateWindow(_buyScreenPrefab, _shopContainer);
+        BuyControlScreen screen = buyScreen.GetComponent<BuyControlScreen>();
+
+        screen.Initialize(type, price);
         screen.Setup();
     }
 

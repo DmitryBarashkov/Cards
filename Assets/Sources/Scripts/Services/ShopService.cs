@@ -1,31 +1,83 @@
 using YG;
 using Zenject;
+using System.Collections.Generic;
+
+public enum ControlType
+{
+    Shuffles,
+    Cleanings,
+    Cancels
+}
 
 public class ShopService
 {
-    [Inject] private PlayerStats _playerStats;
+    private PlayerStats _playerStats;
+    private UIService _service;
 
-    public void PurchaseShuffles(int count)
+    private Dictionary<ControlType, int> _prices = new Dictionary<ControlType, int>()
     {
-        YG2.saves.shuffles += count;
-        YG2.SaveProgress();
+        { ControlType.Shuffles, 75 },
+        { ControlType.Cleanings, 100 },
+        { ControlType.Cancels, 25 }
+    };        
 
+    [Inject]
+    public void Construct(PlayerStats playerStats, UIService service)
+    {
+        _playerStats = playerStats;
+        _service = service;
+    }    
+    
+    public void ShowBuyScreen(ControlType type)
+    {
+        _service.ShowBuyScreen(type, _prices[type]);
+    }
+
+    public void PurchaseControl(ControlType type, int count)
+    {
+        switch (type)
+        {
+            case ControlType.Shuffles:
+                PurchaseShuffles(count);
+                break;
+            case ControlType.Cleanings:
+                PurchaseCleanings(count);
+                break;
+            case ControlType.Cancels:
+                PurchaseCancels(count);
+                break;
+            default: 
+                break;
+        }
+    }
+    
+    private void PurchaseShuffles(int count)
+    {
+
+        UpdatePlayerCoins(ControlType.Shuffles);
+        YG2.saves.shuffles += count;
         _playerStats.currentShuffles.Value += count;
     }
 
-    public void PurchaseCleanings(int count)
+    private void PurchaseCleanings(int count)
     {
+        UpdatePlayerCoins(ControlType.Cleanings);
         YG2.saves.cleanings += count;
-        YG2.SaveProgress();
-
-        _playerStats.currentCleanings.Value += count;
+        _playerStats.currentCleanings.Value += count;        
     }
 
-    public void PurchaseCancels(int count)
+    private void PurchaseCancels(int count)
     {
+        UpdatePlayerCoins(ControlType.Cancels);
         YG2.saves.cancels += count;
-        YG2.SaveProgress();
-
         _playerStats.currentCancels.Value += count;
+    }
+
+    private void UpdatePlayerCoins(ControlType type)
+    {
+        int price = _prices[type];
+
+        YG2.saves.coins -= price;
+        _playerStats.currentCoins.Value -= price;
     }
 }

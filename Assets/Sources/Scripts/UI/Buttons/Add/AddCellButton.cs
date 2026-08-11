@@ -1,6 +1,6 @@
 using Zenject;
 
-public class AddCellButton : EndScreenButton
+public class AddCellButton : ToggleButton
 {
     [Inject] private Bank _bank;
     

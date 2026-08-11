@@ -1,4 +1,5 @@
 using YG;
+using UnityEngine;
 
 public static class Utils
 {
@@ -12,5 +13,13 @@ public static class Utils
             bank.IncreaseBankSize();
             audioService.Activate();
         });
+    }
+
+    public static Color GetColorFromHex(string hex)
+    {
+        if (ColorUtility.TryParseHtmlString(hex, out Color color))
+            return color;
+                
+        return Color.white;
     }
 }

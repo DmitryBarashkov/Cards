@@ -4,7 +4,7 @@ namespace YG
     {
         // Player
         public int level = 1;
-        public int coins = 50;
+        public int coins = 0;
         public int rating = 0;
 
         //Items

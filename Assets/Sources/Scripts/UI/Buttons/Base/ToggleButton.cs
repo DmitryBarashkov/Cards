@@ -4,16 +4,18 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public abstract class EndScreenButton : UIButton, IPointerClickHandler
+public abstract class ToggleButton : UIButton, IPointerClickHandler
 {
+    private const string DisabledTextHex = "#5B5B5B";
+    private const string DisabledIconHex = "#787878";
+
     [SerializeField] private TextMeshProUGUI _caption;
     [SerializeField] private List<Image> _icons;
 
     [SerializeField] protected EndGameScreen _screen;
 
-    [Header("Settings")]
-    [SerializeField] private Color _disabledTextColor;
-    [SerializeField] private Color _disabledIconColor;
+    private Color _disabledTextColor = Utils.GetColorFromHex(DisabledTextHex);
+    private Color _disabledIconColor = Utils.GetColorFromHex(DisabledIconHex);
 
     public void SetEnabled(bool isEnabled)
     {

@@ -1583,7 +1583,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 240, y: -80}
+  m_AnchoredPosition: {x: 190, y: -80}
   m_SizeDelta: {x: 300, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &921023323
@@ -2046,7 +2046,8 @@ MonoBehaviour:
   _fieldPrefab: {fileID: 6389005107029224742, guid: 66d858dd465a3854e95bd3ca8ac9d427, type: 3}
   _winGameScreen: {fileID: 3610180943061351411, guid: daa224f45946c08468a9dc9024fa6c84, type: 3}
   _loseGameScreen: {fileID: 1959870176079970019, guid: 4def4fcd9572075489afbdcc623a5592, type: 3}
-  _shopGameScreen: {fileID: 0}
+  _shopScreen: {fileID: 0}
+  _buyScreen: {fileID: 7727883815716241205, guid: 531ead2a02dd9a04ba2d85bb9e249b88, type: 3}
   _endGameContainer: {fileID: 1732037548}
   _shopContainer: {fileID: 538466113}
   _gameplayContainer: {fileID: 1920216611}
@@ -2712,10 +2713,10 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 2
   m_TargetDisplay: 0
 --- !u!1 &1654051124
 GameObject:

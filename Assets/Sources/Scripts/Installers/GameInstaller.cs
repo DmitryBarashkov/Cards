@@ -11,7 +11,8 @@ public class GameInstaller : MonoInstaller
     [Header("Префабы экранов")]
     [SerializeField] private UIScreen _winGameScreen;
     [SerializeField] private UIScreen _loseGameScreen;
-    [SerializeField] private UIScreen _shopGameScreen;
+    [SerializeField] private UIScreen _shopScreen;
+    [SerializeField] private UIScreen _buyScreen;
 
     [Header("Контейнеры для экранов")]
     [SerializeField] private Transform _endGameContainer;
@@ -25,22 +26,23 @@ public class GameInstaller : MonoInstaller
 
     public override void InstallBindings()
     {
+        LoadPlayerData();
+        BindPlayer();
+        
         BindServices();
         BindLevel();
         BindGameObjects();
-
-        LoadPlayerData();
-        BindPlayer();
     }
 
     private void BindServices()
     {
-        
-        Container.BindInterfacesAndSelfTo<ShopService>().AsSingle().NonLazy();
+        Container.BindInterfacesAndSelfTo<ShopService>()
+            .AsSingle()            
+            .NonLazy();
 
         Container.BindInterfacesAndSelfTo<UIService>()
             .AsSingle()
-            .WithArguments(_winGameScreen, _loseGameScreen, _shopGameScreen, _endGameContainer, _shopContainer)
+            .WithArguments(_winGameScreen, _loseGameScreen, _shopScreen, _buyScreen, _endGameContainer, _shopContainer)
             .NonLazy();
 
         Container.BindFactory<Transform, GameObject, UIScreen, UIScreen.Factory>()

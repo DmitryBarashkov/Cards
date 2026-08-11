@@ -31,7 +31,7 @@ public class Card : UIButton
     {
         _input = input;
         _field = field;
-        _bank = bank;
+        _bank = bank;        
         _gameplayContainer = gameplayContainer.transform;
     }
     
@@ -101,6 +101,6 @@ public class Card : UIButton
                 _bank.AddNewCard(this);
                 _rectTransform.SetParent(_bank.PlaceholderTransform);                
                 _inBank = true;                
-            });
+            });        
     }
 }
