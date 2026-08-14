@@ -76,4 +76,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _audioServicePrefab: {fileID: 1058407200004761399, guid: 01f04beca08063443a63150199bfbe92, type: 3}
   _cardsDatabase: {fileID: 11400000, guid: 798f829cda9f78b4f97fd0894636bdea, type: 2}
-  _gameplayCanvas: {fileID: 7286699065206105201, guid: 77516b0c6740a4447b9178f9a8133a1d, type: 3}
+  _languageFlags:
+  - LanguageCode: ru
+    Sprite: {fileID: 21300000, guid: 7af9652001132497ba7088f0b27ebe03, type: 3}
+  - LanguageCode: en
+    Sprite: {fileID: 21300000, guid: 77a9d892ce0a9494388c3e8e2c94b25e, type: 3}
+  - LanguageCode: tr
+    Sprite: {fileID: 21300000, guid: f96ed64c1140a44688663b65a678910a, type: 3}

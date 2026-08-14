@@ -17,9 +17,7 @@ public class ShopScreen : UIScreen
         UpdateItems();
         _gameObject.SetActive(true);
     }
-
-    public void Close() => _gameObject.SetActive(false);
-
+        
     private void UpdateItems()
     {
         

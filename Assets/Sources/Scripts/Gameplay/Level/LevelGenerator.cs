@@ -20,6 +20,11 @@ public class LevelGenerator
     [Inject]
     public void Construct(int totalTriplets, int uniqueTypes, int bankSize, int gridWidth, int gridHeight, int maxLayers)
     {
+        SetGeneratorParams(totalTriplets, uniqueTypes, bankSize, gridWidth, gridHeight, maxLayers);
+    }
+
+    public void SetGeneratorParams(int totalTriplets, int uniqueTypes, int bankSize, int gridWidth, int gridHeight, int maxLayers)
+    {
         _totalTriplets = totalTriplets;
         _uniqueTypes = uniqueTypes;
         _bankSize = bankSize;

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using YG;
 using Zenject;
@@ -13,10 +14,12 @@ public class GameInstaller : MonoInstaller
     [SerializeField] private UIScreen _loseGameScreen;
     [SerializeField] private UIScreen _shopScreen;
     [SerializeField] private UIScreen _buyScreen;
+    [SerializeField] private UIScreen _generateLevelScreen;
 
     [Header("Контейнеры для экранов")]
     [SerializeField] private Transform _endGameContainer;
     [SerializeField] private Transform _shopContainer;
+    [SerializeField] private Transform _generateLevelContainer;
     [SerializeField] private GameplayContainer _gameplayContainer;
 
     private int _coins;
@@ -28,10 +31,33 @@ public class GameInstaller : MonoInstaller
     {
         LoadPlayerData();
         BindPlayer();
-        
+
+        BindScreens();
+        BindContainers();
+
         BindServices();
         BindLevel();
         BindGameObjects();
+    }
+
+    private void BindContainers()
+    {
+        Container.BindInstance(_endGameContainer).WithId("EndContainer");
+        Container.BindInstance(_shopContainer).WithId("ShopContainer");
+        Container.BindInstance(_generateLevelContainer).WithId("GenerateContainer");
+    }
+
+    private void BindScreens()
+    {
+        Container.BindInstance(_winGameScreen).WithId("Win");
+        Container.BindInstance(_loseGameScreen).WithId("Lose");
+        Container.BindInstance(_generateLevelScreen).WithId("Generate");
+
+        if (_shopScreen != null) 
+            Container.BindInstance(_shopScreen).WithId("Shop");
+
+        if (_buyScreen != null) 
+            Container.BindInstance(_buyScreen).WithId("Buy");
     }
 
     private void BindServices()
@@ -42,7 +68,6 @@ public class GameInstaller : MonoInstaller
 
         Container.BindInterfacesAndSelfTo<UIService>()
             .AsSingle()
-            .WithArguments(_winGameScreen, _loseGameScreen, _shopScreen, _buyScreen, _endGameContainer, _shopContainer)
             .NonLazy();
 
         Container.BindFactory<Transform, GameObject, UIScreen, UIScreen.Factory>()

@@ -25,8 +25,6 @@ public class EndGameScreen : UIScreen, IPointerClickHandler
             FadeIn(_duration);
     }
 
-    public void Close() => _gameObject.SetActive(false);
-
     public void OnPointerClick(PointerEventData eventData) => _canvasGroup.DOComplete();
 
     private void FadeIn(float duration)

@@ -12,7 +12,9 @@ public class Field : MonoBehaviour
     private CardsDatabase _database;
     private CardFactory _factory;
     private LevelGenerator _levelGenerator;
-        
+    private InputService _input;
+    private UIService _uiService;
+
     private readonly List<Card> _activeCards = new List<Card>();
     
     private int _width = 64;
@@ -26,12 +28,29 @@ public class Field : MonoBehaviour
 
     public int CardsCount => _activeCards.Count;
 
+    private void OnEnable()
+    {
+        _input.GenerateLevelBtnPressed += ShowGenerateLevelScreen;
+    }
+
+    private void OnDisable()
+    {
+        _input.GenerateLevelBtnPressed -= ShowGenerateLevelScreen;
+    }
+
+    private void Update()
+    {
+        _input.GetInput();
+    }
+
     [Inject]
-    public void Construct(CardsDatabase database, LevelGenerator levelGenerator, CardFactory factory)
+    public void Construct(CardsDatabase database, LevelGenerator levelGenerator, CardFactory factory, InputService input, UIService uiService)
     {
         _database = database;
         _levelGenerator = levelGenerator;
         _factory = factory;
+        _input = input;
+        _uiService = uiService;
 
         Initialize(_levelGenerator.Generate());
     }
@@ -225,5 +244,10 @@ public class Field : MonoBehaviour
         float posY = node.GridPosition.y * (height / _centerCoefficient);
 
         return new Vector2(posX, posY);
+    }
+
+    private void ShowGenerateLevelScreen()
+    {
+        _uiService.ShowGenerateLevelScreen();
     }
 }

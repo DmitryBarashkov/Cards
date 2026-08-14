@@ -7,13 +7,13 @@
     false,
     false
   ],
-  "idSave": 2,
+  "idSave": 18,
   "level": 2,
-  "coins": 30,
+  "coins": 15,
   "rating": 15,
   "shuffles": 1,
   "cleanings": 1,
   "cancels": 3,
   "isAdsDisabled": false,
-  "isSoundOn": true
+  "isSoundOn": false
 }

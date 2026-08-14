@@ -1,6 +1,12 @@
+using System;
+using UnityEngine;
 
 public class InputService
 {
+    private const string GenerateLevelMenu = "GenerateLevelMenu";
+
+    public event Action GenerateLevelBtnPressed;
+            
     private bool _isActive = true;
 
     public bool IsActive => _isActive;
@@ -13,5 +19,13 @@ public class InputService
     public void Deactivate()
     {
         _isActive = false;
+    }
+
+    public void GetInput()
+    {
+        if (Input.GetButton(GenerateLevelMenu))
+        {
+            GenerateLevelBtnPressed?.Invoke();
+        }
     }
 }

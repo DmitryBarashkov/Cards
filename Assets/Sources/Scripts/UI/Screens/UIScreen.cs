@@ -18,5 +18,10 @@ public class UIScreen : MonoBehaviour
         _gameObject.SetActive(true);
     }
 
+    public void Close()
+    {
+        _gameObject.SetActive(false);
+    }
+
     public class Factory : PlaceholderFactory<Transform, GameObject, UIScreen> { }
 }
