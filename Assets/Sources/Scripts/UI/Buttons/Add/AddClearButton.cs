@@ -12,17 +12,13 @@ public class AddClearButton : ToggleButton
 
     public override void HandleClick()
     {
-        _audioService.PlaySound(SoundType.ButtonClick);
-        _audioService.Deactivate();
+        Utils.ShowAdvForReward(_audioService, _rewardId, AddReward);
+    }
 
-        YG2.RewardedAdvShow(_rewardId, () =>
-        {
-            
-            YG2.saves.cleanings++;
-            _playerStats.currentCleanings.Value++;
-            _audioService.Activate();
-        });
-
+    private void AddReward()
+    {
+        YG2.saves.cleanings++;
+        _playerStats.currentCleanings.Value++;
         SetEnabled(false);
     }
 }

@@ -16,8 +16,8 @@ public class LanguagePanel : MonoBehaviour
 
     private bool _isOpen = false;
 
-    private float _expandedWidth = 320f;
-    private float _collapsedWidth = 0;
+    private float _expandedWidth = 370f;
+    private float _collapsedWidth = 0f;
 
     private float _duration = 0.3f;
     private Ease _easeType = Ease.InOutQuad;
@@ -48,8 +48,8 @@ public class LanguagePanel : MonoBehaviour
         else
         {
             _rectTransform.DOSizeDelta(new Vector2(_collapsedWidth, _rectTransform.sizeDelta.y), _duration).SetEase(_easeType);
-            _canvasGroup.DOFade(0f, _duration);
-
+            _canvasGroup.DOFade(0f, _duration).OnComplete(() => _rectTransform.gameObject.SetActive(true));
+            
             SetInteraction(false);
             _isOpen = false;
         }

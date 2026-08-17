@@ -10,15 +10,13 @@ public class AddCoinsButton : ToggleButton
 
     public override void HandleClick()
     {
-        _audioService.PlaySound(SoundType.ButtonClick);
-        _audioService.Deactivate();
+        Utils.ShowAdvForReward(_audioService, _rewardId, AddReward);
+    }
 
-        YG2.RewardedAdvShow(_rewardId, () =>
-        {
-            _winScreen.AddCoins(_coinsFactor);
-            _audioService.Activate();
-        });
-
+    private void AddReward()
+    {
+        _winScreen.AddCoins(_coinsFactor);
+        _audioService.Activate();
         SetEnabled(false);
     }
 }

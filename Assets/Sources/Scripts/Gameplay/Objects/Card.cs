@@ -9,13 +9,12 @@ public class Card : UIButton
 {
     [SerializeField] Image _image;
         
-    private InputService _input;
     private Field _field;
     private Bank _bank;
     private Transform _gameplayContainer;
         
     private int _id;
-    private float _duration = 0.4f;
+    private float _duration = 0.2f;
     private bool _inBank = false;   
     private bool _isCleared = false;
 
@@ -29,7 +28,6 @@ public class Card : UIButton
     [Inject]
     public void Construct(InputService input, Field field, Bank bank, GameplayContainer gameplayContainer)
     {
-        _input = input;
         _field = field;
         _bank = bank;        
         _gameplayContainer = gameplayContainer.transform;
@@ -38,7 +36,7 @@ public class Card : UIButton
     public override void HandleClick()
     {
         if (_field.IsCardOverlapped(this))
-            Debug.Log($"{gameObject.name} заблокирована: сверху есть другая карточка!");
+            _rectTransform.DOShakePosition(_duration);
         else
             ExecuteCardAction();
     }
@@ -64,20 +62,17 @@ public class Card : UIButton
             throw new ArgumentException("У карточки нет исходной позиции");
 
         _rectTransform.SetParent(_gameplayContainer.transform);
+        _rectTransform.DOMove(_initialPosition, _duration).SetEase(Ease.OutQuad);
+        _rectTransform.SetParent(_field.transform);
+        _rectTransform.SetAsLastSibling();
         
-        _rectTransform.DOMove(_initialPosition, _duration)
-            .SetEase(Ease.OutQuad)
-            .OnComplete(() => {
-                _rectTransform.SetParent(_field.transform);
-                _rectTransform.SetAsLastSibling();
-                _field.AddCard(this);
-                _inBank = false;
-            });
+        _field.AddCard(this);
+        _inBank = false;
     }
 
     private void ExecuteCardAction()
     {
-        if (_input.IsActive && _inBank == false)
+        if (_inBank == false)
         {
             _field.DeleteCard(this);
             MoveToBank();
@@ -91,16 +86,16 @@ public class Card : UIButton
 
         _initialPosition = transform.position;
         
-        _input.Deactivate();
-
         _rectTransform.SetParent(_gameplayContainer.transform);
+        _rectTransform.DOMove(_bank.PlaceholderTransform.position, _duration).SetEase(Ease.OutQuad)
+            .OnComplete(() =>
+            {
+                _bank.CheckSimilarCards();
+            });
 
-        _rectTransform.DOMove(_bank.PlaceholderTransform.position, _duration)
-            .SetEase(Ease.OutQuad)
-            .OnComplete(() => {
-                _bank.AddNewCard(this);
-                _rectTransform.SetParent(_bank.PlaceholderTransform);                
-                _inBank = true;                
-            });        
+        _rectTransform.SetParent(_bank.PlaceholderTransform);
+        
+        _bank.AddNewCard(this);
+        _inBank = true;
     }
 }

@@ -3502,3 +3502,5 @@ InitTestScene*.unity*
 /Assets/PluginYourGames/Editor/BuildLogYG2.txt
 /Assets/PluginYourGames/Editor/BuildLogYG2.txt.meta
 /Build_YandexGames_Build(0).zip
+/*.vsconfig
+/*.editorconfig

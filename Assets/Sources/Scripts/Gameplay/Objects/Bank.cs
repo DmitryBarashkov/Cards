@@ -1,5 +1,4 @@
 using DG.Tweening;
-using Cysharp.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +11,6 @@ public class Bank : MonoBehaviour
     
     [Inject] private LevelState _state;
     [Inject] private Level _level;
-    [Inject] private InputService _input;
     [Inject] private Field _field;
 
     private List<Card> _cards = new();   
@@ -38,23 +36,12 @@ public class Bank : MonoBehaviour
     public bool IsAllCellsEnabled => _bankSize == _bankMaxSize;
     public Transform PlaceholderTransform => _cells[_emptyCellIndex];
 
-    public async void AddNewCard(Card card)
+    public void AddNewCard(Card card)
     {
         _cards.Add(card);
         _lastAddedCard = card;
 
-        bool clearCardResult = await TryClearSimilarCards();
-
-        if (clearCardResult == false)
-        {
-            _emptyCellIndex++;
-            _emptyCellIndex = Mathf.Min(_maxCellIndex, _emptyCellIndex);
-
-            if (this.IsFull)
-                _level.ShowLoseScreen();            
-        } 
-        else if (_field.CardsCount == 0 && _cards.Count == 0)
-            _level.ShowWinScreen();
+        _emptyCellIndex++;        
     }
 
     public void Clear()
@@ -103,23 +90,27 @@ public class Bank : MonoBehaviour
         ClearLastMove();
     }
 
-    private async UniTask<bool> TryClearSimilarCards()
+    public void CheckSimilarCards()
+    {
+        TryClearSimilarCards();
+
+        if (this.IsFull)
+            _level.ShowLoseScreen();        
+        else if (_field.CardsCount == 0 && _cards.Count == 0)
+            _level.ShowWinScreen();
+    }
+
+    private void TryClearSimilarCards()
     {
         if (_cards.Count < _similarCount)
-        {
-            _input.Activate();
-            return false;
-        }
-
+            return;
+        
         var matchGroup = _cards
             .GroupBy(card => card.Id)
             .FirstOrDefault(group => group.Count() >= _similarCount);
 
         if (matchGroup == null)
-        {
-            _input.Activate();
-            return false;
-        }
+            return;
 
         Sequence mainSequence = DOTween.Sequence();
         Card[] cardsToRemove = matchGroup.ToArray();
@@ -128,28 +119,26 @@ public class Bank : MonoBehaviour
         {
             Transform cardTransform = card.transform;
 
+            _cards.Remove(card);
+
             mainSequence.Insert(0, cardTransform.DOScale(_upScale, _duration).SetEase(Ease.OutBack));
             mainSequence.Insert(_duration, cardTransform.DOScale(_downScale, _duration).SetEase(Ease.InQuad));
         }
 
-        await mainSequence.ToUniTask(cancellationToken: this.GetCancellationTokenOnDestroy());
-
-        foreach (Card card in cardsToRemove)
+        mainSequence.OnComplete(() =>
         {
-            _cards.Remove(card);
-            Destroy(card.gameObject);
-                        
-            _emptyCellIndex--;
-            _emptyCellIndex = Mathf.Max(0, _emptyCellIndex);
-        }                
+            foreach (Card card in cardsToRemove)
+            {
+                Destroy(card.gameObject);
 
-        if (_cards.Count > 0)
-            SetCardsInCells();
+                _emptyCellIndex--;                
+            }
 
-        _state.CardsCount.Value -= _similarCount;
-        _input.Activate();
+            if (_cards.Count > 0)
+                SetCardsInCells();
 
-        return true;        
+            _state.CardsCount.Value -= _similarCount;
+        });
     }
 
     private void SetCardsInCells()

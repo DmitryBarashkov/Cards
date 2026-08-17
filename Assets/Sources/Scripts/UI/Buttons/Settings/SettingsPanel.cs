@@ -48,7 +48,7 @@ public class SettingsPanel : MonoBehaviour
             _canvasGroup.DOFade(1f, _duration);
 
             if (_gearIcon != null)
-                _gearIcon.DORotate(new Vector3(0, 0, -180f), _duration, RotateMode.FastBeyond360);
+                _gearIcon.DORotate(new Vector3(0, 0, -360f), _duration, RotateMode.FastBeyond360);
 
             SetInteraction(true);
             _isOpen = true;
@@ -59,7 +59,7 @@ public class SettingsPanel : MonoBehaviour
             _canvasGroup.DOFade(0f, _duration);
 
             if (_gearIcon != null)
-                _gearIcon.DORotate(Vector3.zero, _duration);
+                _gearIcon.DORotate(new Vector3(0, 0, 360f), _duration, RotateMode.FastBeyond360);
 
             SetInteraction(false);
             _isOpen = false;

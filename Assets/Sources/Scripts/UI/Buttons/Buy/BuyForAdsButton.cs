@@ -29,17 +29,7 @@ public class BuyForAdsButton : ToggleButton
     
     public override void HandleClick()
     {
-        _audioService.PlaySound(SoundType.ButtonClick);
-        _audioService.Deactivate();
-
-        YG2.RewardedAdvShow(_rewardId, () =>
-        {
-
-            AddReward();
-            _audioService.Activate();
-        });
-
-        SetEnabled(false);
+        Utils.ShowAdvForReward(_audioService, _rewardId, AddReward);
     }
 
     private void AddReward()
@@ -61,5 +51,7 @@ public class BuyForAdsButton : ToggleButton
             default:
                 break;
         }
+
+        SetEnabled(false);
     }
 }
