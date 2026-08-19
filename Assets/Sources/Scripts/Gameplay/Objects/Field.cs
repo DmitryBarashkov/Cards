@@ -8,7 +8,8 @@ using static CardsDatabase;
 public class Field : MonoBehaviour
 {
     [SerializeField] private ClearContainer _clearContainer;
-    
+
+    private RectTransform _rectTransform;
     private CardsDatabase _database;
     private CardFactory _factory;
     private LevelGenerator _levelGenerator;
@@ -27,6 +28,11 @@ public class Field : MonoBehaviour
     private Ease _shuffleEaseType = Ease.OutQuad;
 
     public int CardsCount => _activeCards.Count;
+
+    private void Awake()
+    {
+        _rectTransform = GetComponent<RectTransform>();
+    }
 
     private void OnEnable()
     {
@@ -53,6 +59,11 @@ public class Field : MonoBehaviour
         _uiService = uiService;
 
         Initialize(_levelGenerator.Generate());
+    }
+
+    public void ApplySize(Vector2 fieldSize)
+    {
+        _rectTransform.sizeDelta = fieldSize;
     }
 
     public void AddCard(Card card)
@@ -106,52 +117,7 @@ public class Field : MonoBehaviour
     public void Initialize(List<CardNode> nodes)
     {
         ClearField();
-        
-        float minX = float.MaxValue;
-        float maxX = float.MinValue;
-        float minY = float.MaxValue;
-        float maxY = float.MinValue;
-
-        foreach (var node in nodes)
-        {
-            Vector2 uiPos = GetCanvasPosition(node, _width, _height);
-
-            if (uiPos.x < minX) minX = uiPos.x;
-            if (uiPos.x + _width > maxX) maxX = uiPos.x + _width;
-            if (uiPos.y < minY) minY = uiPos.y;
-            if (uiPos.y + _height > maxY) maxY = uiPos.y + _height;
-        }
-
-        float centerX = (minX + maxX) / _centerCoefficient;
-        float centerY = (minY + maxY) / _centerCoefficient;
-        Vector2 centerOffset = new Vector2(centerX, centerY);
-
-        foreach (var node in nodes)
-        {
-            Card card = _factory.Create(node.CardTypeId, transform);
-            RectTransform cardRect = card.GetComponent<RectTransform>();
-
-            if (cardRect != null)
-            {
-                Vector2 uiPos = GetCanvasPosition(node, _width, _height);
-
-                cardRect.localScale = Vector3.one;
-                cardRect.sizeDelta = new Vector2(_width, _height);
-                cardRect.anchoredPosition = GetCanvasPosition(node, _width, _height) - centerOffset;
-
-                foreach (RectTransform child in cardRect)
-                {
-                    child.localScale = Vector3.one;
-                    child.localPosition = new Vector3(child.localPosition.x, child.localPosition.y, 0f);
-                }
-                
-                if (_database.TryGetCard(node.CardTypeId, out CardType cardType))
-                {
-                    card.InitializeCardData(cardType);
-                    _activeCards.Add(card);
-                }
-            }
-        }
+        GenerateCards(nodes);
     }
 
     public void ShuffleCards()
@@ -212,6 +178,55 @@ public class Field : MonoBehaviour
 
         _activeCards.Clear();
         _clearContainer.Clear();
+    }
+
+    private void GenerateCards(List<CardNode> nodes)
+    {
+        float minX = float.MaxValue;
+        float maxX = float.MinValue;
+        float minY = float.MaxValue;
+        float maxY = float.MinValue;
+
+        foreach (var node in nodes)
+        {
+            Vector2 uiPos = GetCanvasPosition(node, _width, _height);
+
+            if (uiPos.x < minX) minX = uiPos.x;
+            if (uiPos.x + _width > maxX) maxX = uiPos.x + _width;
+            if (uiPos.y < minY) minY = uiPos.y;
+            if (uiPos.y + _height > maxY) maxY = uiPos.y + _height;
+        }
+
+        float centerX = (minX + maxX) / _centerCoefficient;
+        float centerY = (minY + maxY) / _centerCoefficient;
+        Vector2 centerOffset = new Vector2(centerX, centerY);
+
+        foreach (var node in nodes)
+        {
+            Card card = _factory.Create(node.CardTypeId, transform);
+            RectTransform cardRect = card.GetComponent<RectTransform>();
+
+            if (cardRect != null)
+            {
+                Vector2 uiPos = GetCanvasPosition(node, _width, _height);
+
+                cardRect.localScale = Vector3.one;
+                cardRect.sizeDelta = new Vector2(_width, _height);
+                cardRect.anchoredPosition = GetCanvasPosition(node, _width, _height) - centerOffset;
+
+                foreach (RectTransform child in cardRect)
+                {
+                    child.localScale = Vector3.one;
+                    child.localPosition = new Vector3(child.localPosition.x, child.localPosition.y, 0f);
+                }
+
+                if (_database.TryGetCard(node.CardTypeId, out CardType cardType))
+                {
+                    card.InitializeCardData(cardType);
+                    _activeCards.Add(card);
+                }
+            }
+        }
     }
 
     private Rect GetScreenRect(RectTransform rectTransform)

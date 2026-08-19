@@ -2790,6 +2790,11 @@ MonoBehaviour:
   _shopContainer: {fileID: 538466113}
   _generateLevelContainer: {fileID: 884445246}
   _gameplayContainer: {fileID: 1920216611}
+  _canvasScales:
+  - {fileID: 1654051126}
+  - {fileID: 500758028111497782}
+  - {fileID: 1052907716}
+  - {fileID: 1543698009}
 --- !u!1 &1305320428
 GameObject:
   m_ObjectHideFlags: 0
@@ -4349,8 +4354,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -75}
-  m_SizeDelta: {x: 0, y: -150}
+  m_AnchoredPosition: {x: 0, y: -125}
+  m_SizeDelta: {x: 0, y: -250}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1920216611
 MonoBehaviour:
@@ -4379,10 +4384,10 @@ MonoBehaviour:
   m_Padding:
     m_Left: 0
     m_Right: 0
-    m_Top: 50
+    m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 4
-  m_Spacing: 80
+  m_Spacing: 50
   m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 0

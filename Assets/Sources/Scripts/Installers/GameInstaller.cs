@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.UI;
 using YG;
 using Zenject;
 
@@ -21,6 +22,9 @@ public class GameInstaller : MonoInstaller
     [SerializeField] private Transform _shopContainer;
     [SerializeField] private Transform _generateLevelContainer;
     [SerializeField] private GameplayContainer _gameplayContainer;
+
+    [Header("Сервисы")]
+    [SerializeField] private CanvasScaler[] _canvasScales;
 
     private int _coins;
     private int _shuffles;
@@ -69,6 +73,8 @@ public class GameInstaller : MonoInstaller
         Container.BindInterfacesAndSelfTo<UIService>()
             .AsSingle()
             .NonLazy();
+
+        Container.BindInterfacesAndSelfTo<SizeAdapter>().AsSingle().WithArguments(_canvasScales).NonLazy();
 
         Container.BindFactory<Transform, GameObject, UIScreen, UIScreen.Factory>()
             .FromMethod((container, parent, prefab) =>

@@ -79,21 +79,23 @@ public class Card : UIButton
         }
     }
 
-    private void MoveToBank()
+    private async void MoveToBank()
     {
         if (_bank == null || _bank.IsFull) 
             return;
 
         _initialPosition = transform.position;
+
+        Transform emptyCellTransform = await _bank.GetEmptyCellTransform();
         
         _rectTransform.SetParent(_gameplayContainer.transform);
-        _rectTransform.DOMove(_bank.PlaceholderTransform.position, _duration).SetEase(Ease.OutQuad)
+        _rectTransform.DOMove(emptyCellTransform.position, _duration).SetEase(Ease.OutQuad)
             .OnComplete(() =>
             {
                 _bank.CheckSimilarCards();
             });
 
-        _rectTransform.SetParent(_bank.PlaceholderTransform);
+        _rectTransform.SetParent(emptyCellTransform);
         
         _bank.AddNewCard(this);
         _inBank = true;
