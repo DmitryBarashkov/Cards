@@ -46,7 +46,8 @@ public class UIService
         GameObject shop = GetOrCreateWindow(_shopScreenPrefab, _shopContainer);
         ShopScreen screen = shop.GetComponent<ShopScreen>();
 
-        screen.Setup();
+        if (screen != null)
+            screen.Setup();
     }
 
     public void ShowBuyScreen(ControlType type, int price)
@@ -54,8 +55,11 @@ public class UIService
         GameObject buyScreen = GetOrCreateWindow(_buyScreenPrefab, _shopContainer);
         BuyControlScreen screen = buyScreen.GetComponent<BuyControlScreen>();
 
-        screen.Initialize(type, price);
-        screen.Setup();
+        if (screen != null)
+        {
+            screen.Initialize(type, price);
+            screen.Setup();
+        }
     }
 
     public void ShowEndGameScreen(bool isWin)
@@ -64,7 +68,9 @@ public class UIService
         GameObject window = GetOrCreateWindow(targetPrefab, _endGameContainer);
         UIScreen endGameScreen = window.GetComponent<UIScreen>();
 
-        endGameScreen.Setup();
+        if (endGameScreen != null)
+            endGameScreen.Setup();
+
     }
 
     public void ShowGenerateLevelScreen()
@@ -72,7 +78,8 @@ public class UIService
         GameObject window = GetOrCreateWindow(_generateLevelScreenPrefab, _generateLevelContainer);
         UIScreen generateLevelScreen = window.GetComponent<UIScreen>();
 
-        generateLevelScreen.Setup();
+        if (generateLevelScreen != null)
+            generateLevelScreen.Setup();
     }
 
     private GameObject GetOrCreateWindow(UIScreen prefab, Transform container)

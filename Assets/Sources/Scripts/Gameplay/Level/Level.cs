@@ -1,4 +1,3 @@
-using System;
 using Zenject;
 
 public class Level
@@ -11,8 +10,11 @@ public class Level
 
     private int _levelCardsCount;
     private int _levelNumber;
+
+    private bool _isActive;
     
-    public int CardsCount => _levelCardsCount;    
+    public int CardsCount => _levelCardsCount;
+    public bool IsActive => _isActive;
 
     [Inject]
     public void Construct(LevelState state, LevelGenerator generator, Field field, Bank bank, UIService service, int levelNumber)
@@ -29,6 +31,7 @@ public class Level
 
     public void SetLevelState()
     {
+        _isActive = true;
         _state.CardsCount.Value = _levelCardsCount = _field.CardsCount + _bank.CardsCount;
         _state.LevelNumber.Value = _levelNumber;
     }
@@ -49,6 +52,7 @@ public class Level
 
     public void ShowWinScreen()
     {
+        _isActive = false;
         _service.ShowEndGameScreen(true);
     }
 

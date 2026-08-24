@@ -1,0 +1,7 @@
+﻿id,price,title_en,description_en,title_ru,description_ru,once
+1,50,Beginner Set,Beginner Set,Набор новичка,Набор новичка,true
+2,70,Reinforcement Set,Reinforcement Set,Набор усиления,Набор усиления,false
+3,30,No Ads,No Ads,Без рекламы,Без рекламы,true
+4,100,Small Coins Set,Small Coins Set,Малый набор монет,Малый набор монет,false
+5,300,Average Coins Set,Average Coins Set,Средний набор монет,Средний набор монет,false
+6,500,Big Coins Set,Big Coins Set,Большой набор монет,Большой набор монет,false

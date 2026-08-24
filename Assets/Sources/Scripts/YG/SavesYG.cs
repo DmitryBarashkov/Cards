@@ -12,12 +12,11 @@ namespace YG
         public int cleanings = 1;
         public int cancels = 3;
 
-        // Ads
+        // Shop
         public bool isAdsDisabled = false;
+        public bool isBeginnerSetBought = false;
 
         // Options
         public bool isSoundOn = true;
-
-        //Shop
     }
 }

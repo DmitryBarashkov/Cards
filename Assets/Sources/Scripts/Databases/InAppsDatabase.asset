@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84edc244e73dd634e85a7d52794afb70, type: 3}
+  m_Name: InAppsDatabase
+  m_EditorClassIdentifier: 
+  products:
+  - id: 1
+    price: 50
+    title: Beginner Set
+    isOnceBuy: 1
+  - id: 2
+    price: 70
+    title: Reinforcement Set
+    isOnceBuy: 0
+  - id: 3
+    price: 30
+    title: No Ads
+    isOnceBuy: 1
+  - id: 4
+    price: 100
+    title: Small Coins Set
+    isOnceBuy: 0
+  - id: 5
+    price: 300
+    title: Average Coins Set
+    isOnceBuy: 0
+  - id: 6
+    price: 500
+    title: Big Coins Set
+    isOnceBuy: 0

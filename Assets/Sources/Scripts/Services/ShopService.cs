@@ -13,24 +13,55 @@ public class ShopService
 {
     private PlayerStats _playerStats;
     private UIService _service;
+    private InAppsDatabase _database;
 
     private Dictionary<ControlType, int> _prices = new Dictionary<ControlType, int>()
     {
         { ControlType.Shuffles, 75 },
         { ControlType.Cleanings, 100 },
         { ControlType.Cancels, 25 }
-    };        
+    };
 
     [Inject]
-    public void Construct(PlayerStats playerStats, UIService service)
+    public void Construct(PlayerStats playerStats, UIService service, InAppsDatabase database)
     {
         _playerStats = playerStats;
         _service = service;
-    }    
-    
+        _database = database;
+    }
+
+    public void BuyInApp(string id)
+    {
+        if (_database.TryGetItem(id, out var product))
+        {
+            if (product.isOnceBuy)
+            {
+                switch (product.id)
+                {
+                    case "1":
+                        YG2.saves.isBeginnerSetBought = true;
+                        YG2.saves.isAdsDisabled = true;
+                        break;
+                    case "3":
+                        YG2.saves.isAdsDisabled = true;
+                        break;
+                    default: 
+                        break;
+                }
+
+                YG2.SaveProgress();
+            }
+        }
+    }
+
     public void ShowBuyScreen(ControlType type)
     {
         _service.ShowBuyScreen(type, _prices[type]);
+    }
+
+    public void ShowShopScreen()
+    {
+        _service.ShowShop();
     }
 
     public void PurchaseControl(ControlType type, int count)

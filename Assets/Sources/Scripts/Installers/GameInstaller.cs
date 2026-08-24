@@ -1,6 +1,7 @@
-using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using YG;
 using Zenject;
 
@@ -25,6 +26,8 @@ public class GameInstaller : MonoInstaller
 
     [Header("Сервисы")]
     [SerializeField] private CanvasScaler[] _canvasScales;
+    [SerializeField] private GameObject _advCountContainer;
+    [SerializeField] private TextMeshProUGUI _advCountText;
 
     private int _coins;
     private int _shuffles;
@@ -73,6 +76,14 @@ public class GameInstaller : MonoInstaller
         Container.BindInterfacesAndSelfTo<UIService>()
             .AsSingle()
             .NonLazy();
+
+        Container.BindInstance(_advCountContainer).WithId("AdWarning");
+        Container.BindInstance(_advCountText).WithId("AdvCountText");
+
+        Container.BindInterfacesAndSelfTo<AdService>()
+        .AsSingle()
+        .WithArguments(_advCountText)
+        .NonLazy();
 
         Container.BindInterfacesAndSelfTo<SizeAdapter>().AsSingle().WithArguments(_canvasScales).NonLazy();
 

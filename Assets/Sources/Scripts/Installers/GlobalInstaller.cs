@@ -7,6 +7,7 @@ public class GlobalInstaller : MonoInstaller
 {
     [SerializeField] private AudioService _audioServicePrefab;
     [SerializeField] private CardsDatabase _cardsDatabase;
+    [SerializeField] private InAppsDatabase _inAppDatabase;
 
     [Header("Languages flags")]
     [SerializeField] private List<LanguageSpritePair> _languageFlags;
@@ -14,6 +15,7 @@ public class GlobalInstaller : MonoInstaller
     public override void InstallBindings()
     {
         Container.Bind<CardsDatabase>().FromInstance(_cardsDatabase).AsSingle().NonLazy();
+        Container.Bind<InAppsDatabase>().FromInstance(_inAppDatabase).AsSingle().NonLazy();
         Container.Bind<InputService>().AsSingle().NonLazy();        
         
         Container.BindInterfacesAndSelfTo<AudioService>()

@@ -494,7 +494,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _controlIcon: {fileID: 6662150194043180081}
   _buyForCoinsButton: {fileID: 4485573911005019512}
-  _buyForAdsButton: {fileID: 960275990656116308}
+  _buyForAdsButton: {fileID: 0}
   _priceText: {fileID: 6236624211759135633}
   sprites:
   - type: 0
@@ -1576,7 +1576,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2389356229496441107}
   - component: {fileID: 1331702389554908353}
-  - component: {fileID: 960275990656116308}
+  - component: {fileID: 9172393826131254285}
   m_Layer: 5
   m_Name: BuyForAd
   m_TagString: Untagged
@@ -1648,7 +1648,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &960275990656116308
+--- !u!114 &9172393826131254285
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1657,10 +1657,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 9153292947688534499}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d39ac503f75c09a4f906e57edd256a39, type: 3}
+  m_Script: {fileID: 11500000, guid: fd73d70ca8841b04da0fcc13fbc82dd0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _caption: {fileID: 0}
-  _icons:
-  - {fileID: 4805728618974011634}
-  _screen: {fileID: 0}

@@ -9,7 +9,7 @@ public class BuyControlScreen : UIScreen
 {
     [SerializeField] private Image _controlIcon;
     [SerializeField] private BuyForCoinsButton _buyForCoinsButton;
-    [SerializeField] private BuyForAdsButton _buyForAdsButton;
+    [SerializeField] private BuyByAdsButton _buyForAdsButton;
     [SerializeField] private TextMeshProUGUI _priceText;
 
     [Serializable]
@@ -27,18 +27,13 @@ public class BuyControlScreen : UIScreen
     {
         _priceText.text = price.ToString();
         
-        _buyForAdsButton.SetReward(type);
-        _buyForAdsButton.SetEnabled(true);
+        _buyForAdsButton.SetReward(type);        
         
         if (TryGetSprite(type, out Sprite result))
             _controlIcon.sprite = result;
 
         if (price <= _stats.currentCoins.Value)
-        {
-            _buyForCoinsButton.SetProductType(type);
-            _buyForCoinsButton.SetEnabled(true);
-
-        }
+            _buyForCoinsButton.SetProductType(type);            
         else
             _buyForCoinsButton.SetEnabled(false);        
     }
