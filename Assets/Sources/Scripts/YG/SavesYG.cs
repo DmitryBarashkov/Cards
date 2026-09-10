@@ -3,20 +3,20 @@ namespace YG
     public partial class SavesYG
     {
         // Player
-        public int level = 1;
-        public int coins = 0;
-        public int rating = 0;
+        public int Level = 1;
+        public int Coins = 0;
+        public int Rating = 0;
 
-        //Items
-        public int shuffles = 1;
-        public int cleanings = 1;
-        public int cancels = 3;
+        // Items
+        public int Shuffles = 1;
+        public int Cleanings = 1;
+        public int Cancels = 3;
 
         // Shop
-        public bool isAdsDisabled = false;
-        public bool isBeginnerSetBought = false;
+        public bool IsAdsDisabled = false;
+        public bool IsBeginnerSetBought = false;
 
         // Options
-        public bool isSoundOn = true;
+        public bool IsSoundOn = true;
     }
 }

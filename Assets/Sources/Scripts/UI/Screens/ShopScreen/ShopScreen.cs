@@ -1,25 +1,24 @@
-using Zenject;
 using UniRx;
+using Zenject;
 
 public class ShopScreen : UIScreen
 {
-    [Inject]
-    private PlayerStats _playerStats;
+    [Inject] private PlayerStats _playerStats;
 
     public override void Setup()
     {
-        _playerStats.currentCoins.Skip(1).Subscribe((newCoins) =>
+        _playerStats.CurrentCoins.Skip(1).Subscribe((newCoins) =>
         {
             UpdateItems();
         })
         .AddTo(this);
 
         UpdateItems();
-        _gameObject.SetActive(true);
+
+        base.Setup();
     }
-        
+
     private void UpdateItems()
     {
-        
     }
 }

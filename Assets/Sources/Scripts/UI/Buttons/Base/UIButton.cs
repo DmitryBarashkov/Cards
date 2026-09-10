@@ -9,11 +9,11 @@ public abstract class UIButton : MonoBehaviour
 
     protected Button _button;
     protected RectTransform _rectTransform;
-    
+
     private void Awake()
     {
         _button = GetComponent<Button>();
-        _rectTransform = GetComponent<RectTransform>();        
+        _rectTransform = GetComponent<RectTransform>();
     }
 
     protected virtual void OnEnable()

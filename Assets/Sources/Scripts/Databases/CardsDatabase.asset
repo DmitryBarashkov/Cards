@@ -12,28 +12,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4dc0dca350494e4d8290433e614fb15, type: 3}
   m_Name: CardsDatabase
   m_EditorClassIdentifier: 
-  cardTypes:
-  - id: 0
-    color: {r: 0.990566, g: 0.990566, b: 0.990566, a: 1}
-    sprite: {fileID: 21300000, guid: 69ec5f66332d1e843b0bf368c0bb14c0, type: 3}
-  - id: 1
-    color: {r: 1, g: 1, b: 1, a: 1}
-    sprite: {fileID: 21300000, guid: 717ef7366d128154a88e708c4129bdc2, type: 3}
-  - id: 2
-    color: {r: 1, g: 1, b: 1, a: 1}
-    sprite: {fileID: 21300000, guid: 52e5b814ed558034496a7b117f22f691, type: 3}
-  - id: 3
-    color: {r: 1, g: 1, b: 1, a: 1}
-    sprite: {fileID: 21300000, guid: 63803df135b6e8241931223df8ebcd45, type: 3}
-  - id: 4
-    color: {r: 1, g: 1, b: 1, a: 1}
-    sprite: {fileID: 21300000, guid: e5fb8f4f400a0f44fb0515edc8647005, type: 3}
-  - id: 5
-    color: {r: 1, g: 1, b: 1, a: 1}
-    sprite: {fileID: 21300000, guid: e6a80ab6b1535724b96ebd1bff097372, type: 3}
-  - id: 6
-    color: {r: 1, g: 1, b: 1, a: 1}
-    sprite: {fileID: 21300000, guid: 61d5315d632756f449030626dfdd395d, type: 3}
-  - id: 7
-    color: {r: 1, g: 1, b: 1, a: 1}
-    sprite: {fileID: 21300000, guid: 597d71a7b92014f46938d5ccc79d4765, type: 3}
+  CardTypes:
+  - Id: 0
+    Color: {r: 0, g: 0, b: 0, a: 0}
+    Sprite: {fileID: 21300000, guid: 69ec5f66332d1e843b0bf368c0bb14c0, type: 3}
+  - Id: 1
+    Color: {r: 0, g: 0, b: 0, a: 0}
+    Sprite: {fileID: 21300000, guid: ec06f5e7b761d704d9762c9ff9b75b91, type: 3}
+  - Id: 2
+    Color: {r: 0, g: 0, b: 0, a: 0}
+    Sprite: {fileID: 21300000, guid: 61d5315d632756f449030626dfdd395d, type: 3}
+  - Id: 3
+    Color: {r: 0, g: 0, b: 0, a: 0}
+    Sprite: {fileID: 21300000, guid: 7ccfee6ce05538246a065d312b1b34e3, type: 3}
+  - Id: 4
+    Color: {r: 0, g: 0, b: 0, a: 0}
+    Sprite: {fileID: 21300000, guid: cb89955507fad024daecd0757dfd3c76, type: 3}
+  - Id: 5
+    Color: {r: 0, g: 0, b: 0, a: 0}
+    Sprite: {fileID: 21300000, guid: aa2e7d08c73a6f5418d2d6c8cd7f42e8, type: 3}
+  - Id: 6
+    Color: {r: 0, g: 0, b: 0, a: 0}
+    Sprite: {fileID: 21300000, guid: 2984eaff4b0e11f41afa1a59ae9fb891, type: 3}
+  - Id: 7
+    Color: {r: 0, g: 0, b: 0, a: 0}
+    Sprite: {fileID: 21300000, guid: cdfa38308a5d7f24ba6953ef9061693d, type: 3}
+  - Id: 8
+    Color: {r: 0, g: 0, b: 0, a: 0}
+    Sprite: {fileID: 21300000, guid: 9299269859580cc44a46810497566542, type: 3}
+  - Id: 9
+    Color: {r: 0, g: 0, b: 0, a: 0}
+    Sprite: {fileID: 21300000, guid: 0ccd78817d102014e89e4f50d1f26529, type: 3}
+  - Id: 10
+    Color: {r: 0, g: 0, b: 0, a: 0}
+    Sprite: {fileID: 21300000, guid: 217af7f27f74e494289bdff755f4ee34, type: 3}

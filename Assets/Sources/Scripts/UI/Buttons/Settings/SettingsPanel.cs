@@ -13,8 +13,8 @@ public class SettingsPanel : MonoBehaviour
 
     private bool _isOpen = false;
 
-    private float _expandedHeight = 380f;
-    private float _collapsedHeight = 125f;
+    private float _expandedHeight = 340f;
+    private float _collapsedHeight = 100f;
 
     private float _duration = 0.3f;
     private Ease _easeType = Ease.InOutQuad;

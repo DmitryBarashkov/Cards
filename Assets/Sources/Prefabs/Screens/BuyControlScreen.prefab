@@ -492,17 +492,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5397f69e0e62c1a4b8d830ea31b03f79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Sprites: []
   _controlIcon: {fileID: 6662150194043180081}
   _buyForCoinsButton: {fileID: 4485573911005019512}
-  _buyForAdsButton: {fileID: 0}
+  _buyForAdsButton: {fileID: 9172393826131254285}
   _priceText: {fileID: 6236624211759135633}
-  sprites:
-  - type: 0
-    sprite: {fileID: 21300000, guid: a28fee3d1336843688679fd3eaca6fe8, type: 3}
-  - type: 1
-    sprite: {fileID: 21300000, guid: 5f9ac24869b2e4e8f9205bae17484932, type: 3}
-  - type: 2
-    sprite: {fileID: 21300000, guid: cb490fde3fe33469ca6c0cb555306d70, type: 3}
 --- !u!1 &4622737484524524563
 GameObject:
   m_ObjectHideFlags: 0
@@ -597,10 +591,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35ef80d3a24800d41afde379c53c5e49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _screen: {fileID: 0}
   _caption: {fileID: 6236624211759135633}
   _icons:
   - {fileID: 2625927171554494183}
-  _screen: {fileID: 0}
 --- !u!1 &4689973039750644934
 GameObject:
   m_ObjectHideFlags: 0
@@ -1660,3 +1654,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd73d70ca8841b04da0fcc13fbc82dd0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _screen: {fileID: 7727883815716241205}

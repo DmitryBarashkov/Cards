@@ -1,13 +1,11 @@
-using DG.Tweening;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Events;
 using Zenject;
 
 public class LanguagePanel : MonoBehaviour
 {
-    public event UnityAction LanguageChanged;
-
     [SerializeField] private CanvasGroup _canvasGroup;
 
     [Inject] private AudioService _audioService;
@@ -16,11 +14,13 @@ public class LanguagePanel : MonoBehaviour
 
     private bool _isOpen = false;
 
-    private float _expandedWidth = 370f;
+    private float _expandedWidth = 315f;
     private float _collapsedWidth = 0f;
 
     private float _duration = 0.3f;
     private Ease _easeType = Ease.InOutQuad;
+
+    public event UnityAction LanguageChanged;
 
     private void Awake()
     {
@@ -49,7 +49,7 @@ public class LanguagePanel : MonoBehaviour
         {
             _rectTransform.DOSizeDelta(new Vector2(_collapsedWidth, _rectTransform.sizeDelta.y), _duration).SetEase(_easeType);
             _canvasGroup.DOFade(0f, _duration).OnComplete(() => _rectTransform.gameObject.SetActive(true));
-            
+
             SetInteraction(false);
             _isOpen = false;
         }

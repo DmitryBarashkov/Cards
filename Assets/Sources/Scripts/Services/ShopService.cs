@@ -1,12 +1,12 @@
+using System.Collections.Generic;
 using YG;
 using Zenject;
-using System.Collections.Generic;
 
 public enum ControlType
 {
     Shuffles,
     Cleanings,
-    Cancels
+    Cancels,
 }
 
 public class ShopService
@@ -19,7 +19,7 @@ public class ShopService
     {
         { ControlType.Shuffles, 75 },
         { ControlType.Cleanings, 100 },
-        { ControlType.Cancels, 25 }
+        { ControlType.Cancels, 25 },
     };
 
     [Inject]
@@ -34,18 +34,18 @@ public class ShopService
     {
         if (_database.TryGetItem(id, out var product))
         {
-            if (product.isOnceBuy)
+            if (product.IsOnceBuy)
             {
-                switch (product.id)
+                switch (product.Id)
                 {
                     case "1":
-                        YG2.saves.isBeginnerSetBought = true;
-                        YG2.saves.isAdsDisabled = true;
+                        YG2.saves.IsBeginnerSetBought = true;
+                        YG2.saves.IsAdsDisabled = true;
                         break;
                     case "3":
-                        YG2.saves.isAdsDisabled = true;
+                        YG2.saves.IsAdsDisabled = true;
                         break;
-                    default: 
+                    default:
                         break;
                 }
 
@@ -77,38 +77,37 @@ public class ShopService
             case ControlType.Cancels:
                 PurchaseCancels(count);
                 break;
-            default: 
+            default:
                 break;
         }
     }
-    
+
     private void PurchaseShuffles(int count)
     {
-
         UpdatePlayerCoins(ControlType.Shuffles);
-        YG2.saves.shuffles += count;
-        _playerStats.currentShuffles.Value += count;
+        YG2.saves.Shuffles += count;
+        _playerStats.CurrentShuffles.Value += count;
     }
 
     private void PurchaseCleanings(int count)
     {
         UpdatePlayerCoins(ControlType.Cleanings);
-        YG2.saves.cleanings += count;
-        _playerStats.currentCleanings.Value += count;        
+        YG2.saves.Cleanings += count;
+        _playerStats.CurrentCleanings.Value += count;
     }
 
     private void PurchaseCancels(int count)
     {
         UpdatePlayerCoins(ControlType.Cancels);
-        YG2.saves.cancels += count;
-        _playerStats.currentCancels.Value += count;
+        YG2.saves.Cancels += count;
+        _playerStats.CurrentCancels.Value += count;
     }
 
     private void UpdatePlayerCoins(ControlType type)
     {
         int price = _prices[type];
 
-        YG2.saves.coins -= price;
-        _playerStats.currentCoins.Value -= price;
+        YG2.saves.Coins -= price;
+        _playerStats.CurrentCoins.Value -= price;
     }
 }

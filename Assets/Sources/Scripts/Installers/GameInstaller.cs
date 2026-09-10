@@ -1,7 +1,6 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.EventSystems;
 using YG;
 using Zenject;
 
@@ -60,17 +59,17 @@ public class GameInstaller : MonoInstaller
         Container.BindInstance(_loseGameScreen).WithId("Lose");
         Container.BindInstance(_generateLevelScreen).WithId("Generate");
 
-        if (_shopScreen != null) 
+        if (_shopScreen != null)
             Container.BindInstance(_shopScreen).WithId("Shop");
 
-        if (_buyScreen != null) 
+        if (_buyScreen != null)
             Container.BindInstance(_buyScreen).WithId("Buy");
     }
 
     private void BindServices()
     {
         Container.BindInterfacesAndSelfTo<ShopService>()
-            .AsSingle()            
+            .AsSingle()
             .NonLazy();
 
         Container.BindInterfacesAndSelfTo<UIService>()
@@ -101,14 +100,14 @@ public class GameInstaller : MonoInstaller
         Container.Bind<LevelState>().AsSingle().NonLazy();
         Container.Bind<Level>()
             .AsSingle()
-            .WithArguments(YG2.saves.level)
+            .WithArguments(YG2.saves.Level)
             .NonLazy();
     }
 
     private void BindGameObjects()
     {
         Container.Bind<GameplayContainer>().FromComponentInHierarchy().AsSingle();
-        
+
         Container.Bind<Bank>()
             .FromComponentInNewPrefab(_bankPrefab)
             .UnderTransform(_gameplayContainer.transform)
@@ -124,10 +123,10 @@ public class GameInstaller : MonoInstaller
 
     private void LoadPlayerData()
     {
-        _coins = YG2.saves.coins;
-        _shuffles = YG2.saves.shuffles;
-        _cleanings = YG2.saves.cleanings;
-        _cancels = YG2.saves.cancels;
+        _coins = YG2.saves.Coins;
+        _shuffles = YG2.saves.Shuffles;
+        _cleanings = YG2.saves.Cleanings;
+        _cancels = YG2.saves.Cancels;
     }
 
     private void BindPlayer()

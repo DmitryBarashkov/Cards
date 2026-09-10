@@ -1,3 +1,4 @@
+using YG;
 using Zenject;
 
 public class Level
@@ -12,8 +13,9 @@ public class Level
     private int _levelNumber;
 
     private bool _isActive;
-    
+
     public int CardsCount => _levelCardsCount;
+
     public bool IsActive => _isActive;
 
     [Inject]
@@ -38,6 +40,8 @@ public class Level
 
     public void Restart()
     {
+        YG2.InterstitialAdvShow();
+
         var nodes = _generator.GetInitialNodes();
 
         _bank.Clear();

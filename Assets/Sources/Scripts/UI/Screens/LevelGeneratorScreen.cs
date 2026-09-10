@@ -11,20 +11,19 @@ public class LevelGeneratorScreen : UIScreen
     [SerializeField] private TMP_InputField _width;
     [SerializeField] private TMP_InputField _height;
     [SerializeField] private TMP_InputField _maxLayers;
-    
+
     [Inject] private LevelGenerator _generator;
     [Inject] private Field _field;
-    
+
     public void GenerateLevel()
     {
         _generator.SetGeneratorParams(
-            Int32.Parse(_triplets.text),
-            Int32.Parse(_uniqueCards.text),
-            Int32.Parse(_bankSize.text),
-            Int32.Parse(_width.text),
-            Int32.Parse(_height.text),
-            Int32.Parse(_maxLayers.text)
-        );
+            int.Parse(_triplets.text),
+            int.Parse(_uniqueCards.text),
+            int.Parse(_bankSize.text),
+            int.Parse(_width.text),
+            int.Parse(_height.text),
+            int.Parse(_maxLayers.text));
 
         _field.Initialize(_generator.Generate());
     }

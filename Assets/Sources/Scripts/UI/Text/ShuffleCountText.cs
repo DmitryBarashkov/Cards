@@ -4,7 +4,7 @@ public class ShuffleCountText : UIPlayerCountText
 {
     private void OnEnable()
     {
-        _state.currentShuffles.Subscribe((int count) =>
+        _state.CurrentShuffles.Subscribe((int count) =>
         {
             _text.text = count.ToString();
         })

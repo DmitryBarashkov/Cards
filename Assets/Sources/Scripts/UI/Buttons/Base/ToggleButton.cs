@@ -6,13 +6,13 @@ using UnityEngine.UI;
 
 public abstract class ToggleButton : UIButton, IPointerClickHandler
 {
+    [SerializeField] protected EndGameScreen _screen;
+
     private const string DisabledTextHex = "#5B5B5B";
     private const string DisabledIconHex = "#787878";
 
     [SerializeField] private TextMeshProUGUI _caption;
     [SerializeField] private List<Image> _icons;
-
-    [SerializeField] protected EndGameScreen _screen;
 
     private Color _disabledTextColor = Utils.GetColorFromHex(DisabledTextHex);
     private Color _disabledIconColor = Utils.GetColorFromHex(DisabledIconHex);

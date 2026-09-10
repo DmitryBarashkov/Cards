@@ -1,28 +1,29 @@
-using DG.Tweening;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 
 public class ClearContainer : MonoBehaviour
 {
     [SerializeField] private List<ClearCell> _cells;
 
-    private List<Card> _cards = new();
-    
-    private float _clearDuration = 0.4f;    
-    
+    private List<Card> _cards = new ();
+
+    private float _clearDuration = 0.4f;
+
     public void AddNewCard(Card card)
     {
         ClearCell clearCell = GetClearCell();
         Transform cellTransform = clearCell.transform;
 
         clearCell.SetEmpty(false);
-        
+
         _cards.Add(card);
         card.RectTransform.SetParent(cellTransform);
 
         card.RectTransform.DOMove(cellTransform.position, _clearDuration)
             .SetEase(Ease.OutQuad)
-            .OnComplete(() => {                               
+            .OnComplete(() =>
+            {
                 card.SetCleared();
             });
     }
@@ -30,7 +31,7 @@ public class ClearContainer : MonoBehaviour
     public void DeleteCard(Card card)
     {
         ClearCell cell = card.transform.GetComponentInParent<ClearCell>();
-        
+
         if (cell.transform.childCount == 1)
             cell.SetEmpty(true);
 
@@ -41,7 +42,7 @@ public class ClearContainer : MonoBehaviour
     {
         foreach (ClearCell cell in _cells)
             cell.SetEmpty(true);
-        
+
         _cards.Clear();
     }
 
@@ -49,11 +50,11 @@ public class ClearContainer : MonoBehaviour
     {
         int minCellItemsCount = 0;
         int minCellCountIndex = 0;
-        
+
         for (int i = 0; i < _cells.Count; i++)
         {
             ClearCell cell = _cells[i];
-            
+
             if (cell.IsEmpty)
                 return cell;
 

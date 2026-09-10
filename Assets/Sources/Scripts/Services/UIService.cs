@@ -4,6 +4,8 @@ using Zenject;
 
 public class UIService
 {
+    private readonly Dictionary<Component, GameObject> _cachedWindows = new ();
+
     private DiContainer _container;
 
     private UIScreen _winScreenPrefab;
@@ -16,15 +18,13 @@ public class UIService
     private Transform _shopContainer;
     private Transform _generateLevelContainer;
 
-    private readonly Dictionary<Component, GameObject> _cachedWindows = new();
-
     [Inject]
     public void Construct(
         DiContainer container,
         [Inject(Id = "Win")] UIScreen winScreenPrefab,
         [Inject(Id = "Lose")] UIScreen loseScreenPrefab,
         [Inject(Id = "Generate")] UIScreen generateLevelScreenPrefab,
-        [Inject(Id = "Shop", Optional = true)] UIScreen shopScreenPrefab, 
+        [Inject(Id = "Shop", Optional = true)] UIScreen shopScreenPrefab,
         [Inject(Id = "Buy", Optional = true)] UIScreen buyGameScreen,
         [Inject(Id = "EndContainer")] Transform endGameContainer,
         [Inject(Id = "ShopContainer")] Transform shopContainer,
@@ -70,7 +70,6 @@ public class UIService
 
         if (endGameScreen != null)
             endGameScreen.Setup();
-
     }
 
     public void ShowGenerateLevelScreen()

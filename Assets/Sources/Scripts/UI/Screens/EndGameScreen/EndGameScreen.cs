@@ -5,13 +5,14 @@ using UnityEngine.EventSystems;
 [RequireComponent(typeof(CanvasGroup))]
 public class EndGameScreen : UIScreen, IPointerClickHandler
 {
-    [SerializeField] ParticleSystem _effect;
+    [SerializeField] private ParticleSystem _effect;
 
     private float _duration = 1.5f;
 
     public override void Setup()
     {
-        _gameObject.SetActive(true);
+        base.Setup();
+
         _canvasGroup.interactable = false;
         Canvas.ForceUpdateCanvases();
 
@@ -22,7 +23,9 @@ public class EndGameScreen : UIScreen, IPointerClickHandler
             _effect.Play();
         }
         else
+        {
             FadeIn(_duration);
+        }
     }
 
     public void OnPointerClick(PointerEventData eventData) => _canvasGroup.DOComplete();

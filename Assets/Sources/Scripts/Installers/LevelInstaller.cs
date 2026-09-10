@@ -4,7 +4,7 @@ using Zenject;
 public class LevelInstaller : MonoInstaller
 {
     [Header("Настройки уровня")]
-    [SerializeField] private int _totalTriplets = 20;    
+    [SerializeField] private int _totalTriplets = 20;
     [SerializeField] private int _uniqueTypesCount = 5;
     [SerializeField] private int _bankSize = 7;
 
@@ -14,7 +14,7 @@ public class LevelInstaller : MonoInstaller
     [SerializeField] private int _maxLayers = 4;
 
     [Header("Карточки")]
-    [SerializeField] private Card _cardPrefab;    
+    [SerializeField] private Card _cardPrefab;
 
     public override void InstallBindings()
     {
@@ -22,7 +22,6 @@ public class LevelInstaller : MonoInstaller
         Container.Bind<CardNode>().AsTransient();
         Container.Bind<LevelGenerator>()
             .AsSingle()
-            .WithArguments(_totalTriplets, _uniqueTypesCount, _bankSize,
-                           _gridWidth, _gridHeight, _maxLayers);
+            .WithArguments(_totalTriplets, _uniqueTypesCount, _bankSize, _gridWidth, _gridHeight, _maxLayers);
     }
 }

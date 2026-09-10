@@ -7,49 +7,48 @@ using Zenject;
 
 public class BuyControlScreen : UIScreen
 {
+    public List<ControlSprite> Sprites;
     [SerializeField] private Image _controlIcon;
     [SerializeField] private BuyForCoinsButton _buyForCoinsButton;
     [SerializeField] private BuyByAdsButton _buyForAdsButton;
     [SerializeField] private TextMeshProUGUI _priceText;
 
-    [Serializable]
-    public struct ControlSprite
-    {
-        public ControlType type;
-        public Sprite sprite;
-    }
-
-    public List<ControlSprite> sprites;
-
-    [Inject] PlayerStats _stats;
+    [Inject] private PlayerStats _stats;
 
     public void Initialize(ControlType type, int price)
     {
         _priceText.text = price.ToString();
-        
-        _buyForAdsButton.SetReward(type);        
-        
+
+        _buyForAdsButton.SetReward(type);
+
         if (TryGetSprite(type, out Sprite result))
             _controlIcon.sprite = result;
 
-        if (price <= _stats.currentCoins.Value)
-            _buyForCoinsButton.SetProductType(type);            
+        if (price <= _stats.CurrentCoins.Value)
+            _buyForCoinsButton.SetProductType(type);
         else
-            _buyForCoinsButton.SetEnabled(false);        
+            _buyForCoinsButton.SetEnabled(false);
     }
 
     private bool TryGetSprite(ControlType type, out Sprite result)
     {
-        foreach(var item in sprites)
+        foreach (var item in Sprites)
         {
-            if (item.type == type)
+            if (item.Type == type)
             {
-                result = item.sprite;
+                result = item.Sprite;
                 return true;
             }
         }
 
         result = null;
         return false;
+    }
+
+    [Serializable]
+    public struct ControlSprite
+    {
+        public ControlType Type;
+        public Sprite Sprite;
     }
 }

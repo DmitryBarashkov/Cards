@@ -16,8 +16,8 @@ public class GlobalInstaller : MonoInstaller
     {
         Container.Bind<CardsDatabase>().FromInstance(_cardsDatabase).AsSingle().NonLazy();
         Container.Bind<InAppsDatabase>().FromInstance(_inAppDatabase).AsSingle().NonLazy();
-        Container.Bind<InputService>().AsSingle().NonLazy();        
-        
+        Container.Bind<InputService>().AsSingle().NonLazy();
+
         Container.BindInterfacesAndSelfTo<AudioService>()
             .FromComponentInNewPrefab(_audioServicePrefab)
             .UnderTransformGroup("GlobalServices")
@@ -33,7 +33,7 @@ public class GlobalInstaller : MonoInstaller
 
         foreach (var pair in _languageFlags)
         {
-            if (pair.Sprite == null) 
+            if (pair.Sprite == null)
                 continue;
 
             string key = pair.LanguageCode.ToLower().Trim();
@@ -41,7 +41,7 @@ public class GlobalInstaller : MonoInstaller
             if (!flagsDictionary.ContainsKey(key))
                 flagsDictionary.Add(key, pair.Sprite);
             else
-                Debug.LogWarning($"[GlobalInstaller] Дубликат ключа языка: {key}");            
+                Debug.LogWarning($"[GlobalInstaller] Дубликат ключа языка: {key}");
         }
 
         Container.Bind<Dictionary<string, Sprite>>().WithId("Languages").FromInstance(flagsDictionary).AsSingle();

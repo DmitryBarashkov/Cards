@@ -5,9 +5,9 @@ public class InputService
 {
     private const string GenerateLevelMenu = "GenerateLevelMenu";
 
-    public event Action GenerateLevelBtnPressed;
-            
     private bool _isActive = true;
+
+    public event Action GenerateLevelBtnPressed;
 
     public bool IsActive => _isActive;
 
@@ -24,8 +24,6 @@ public class InputService
     public void GetInput()
     {
         if (Input.GetButton(GenerateLevelMenu))
-        {
             GenerateLevelBtnPressed?.Invoke();
-        }
     }
 }

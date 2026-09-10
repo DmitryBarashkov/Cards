@@ -28,15 +28,10 @@ public class InAppImporter : EditorWindow
             string absolutePath = EditorUtility.OpenFilePanel("Выбрать CSV файл", "Assets", "csv");
             if (!string.IsNullOrEmpty(absolutePath))
             {
-                // Превращаем абсолютный путь в относительный для Unity, если файл внутри проекта
                 if (absolutePath.StartsWith(Application.dataPath))
-                {
                     csvPath = "Assets" + absolutePath.Substring(Application.dataPath.Length);
-                }
                 else
-                {
-                    csvPath = absolutePath;
-                }
+                    csvPath = absolutePath;                
             }
         }
         
@@ -47,9 +42,7 @@ public class InAppImporter : EditorWindow
         GUILayout.Space(15);
 
         if (GUILayout.Button("Импортировать данные", GUILayout.Height(30)))
-        {
-            ImportCsv();
-        }
+            ImportCsv();        
     }
 
     private void ImportCsv()
@@ -74,7 +67,7 @@ public class InAppImporter : EditorWindow
                 return;
 
             Undo.RecordObject(targetSO, "Import CSV Data");
-            targetSO.products.Clear();
+            targetSO.Products.Clear();
 
             for (int i = 1; i < lines.Length; i++)
             {
@@ -84,15 +77,7 @@ public class InAppImporter : EditorWindow
                 string[] values = line.Split(',');
                 if (values.Length < 6) continue;
 
-                ProductItem item = new ProductItem
-                {
-                    id = values[0],
-                    price = int.Parse(values[1]),
-                    title = values[2],
-                    isOnceBuy = bool.Parse(values[6]),
-                };
-
-                targetSO.products.Add(item);
+                targetSO.AddProductItem(values[0], int.Parse(values[1]), values[2], bool.Parse(values[6]));
             }
 
             EditorUtility.SetDirty(targetSO);

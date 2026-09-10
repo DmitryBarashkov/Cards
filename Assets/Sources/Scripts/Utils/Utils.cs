@@ -1,6 +1,6 @@
-using YG;
-using UnityEngine;
 using System;
+using UnityEngine;
+using YG;
 
 public static class Utils
 {
@@ -8,7 +8,7 @@ public static class Utils
     {
         if (ColorUtility.TryParseHtmlString(hex, out Color color))
             return color;
-                
+
         return Color.white;
     }
 

@@ -5,7 +5,7 @@ using Zenject;
 public class AddCancelButton : ToggleButton
 {
     [SerializeField] private int _addCount = 3;
-    
+
     [Inject] private PlayerStats _playerStats;
 
     private string _rewardId = "AddCancel";
@@ -17,8 +17,8 @@ public class AddCancelButton : ToggleButton
 
     private void AddReward()
     {
-        YG2.saves.cancels += _addCount;
-        _playerStats.currentCancels.Value += _addCount;
+        YG2.saves.Cancels += _addCount;
+        _playerStats.CurrentCancels.Value += _addCount;
         SetEnabled(false);
     }
 }

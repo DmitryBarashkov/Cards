@@ -1,12 +1,16 @@
-using DG.Tweening;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using Zenject;
+
 using static CardsDatabase;
 
 public class Field : MonoBehaviour
 {
+    private readonly List<Card> _activeCards = new List<Card>();
+
     [SerializeField] private ClearContainer _clearContainer;
+    [SerializeField] private Transform _cardsContainer;
 
     private RectTransform _rectTransform;
     private CardsDatabase _database;
@@ -15,8 +19,6 @@ public class Field : MonoBehaviour
     private InputService _input;
     private UIService _uiService;
 
-    private readonly List<Card> _activeCards = new List<Card>();
-    
     private int _width = 64;
     private int _height = 64;
 
@@ -27,6 +29,18 @@ public class Field : MonoBehaviour
     private Ease _shuffleEaseType = Ease.OutQuad;
 
     public int CardsCount => _activeCards.Count;
+
+    [Inject]
+    public void Construct(CardsDatabase database, LevelGenerator levelGenerator, CardFactory factory, InputService input, UIService uiService)
+    {
+        _database = database;
+        _levelGenerator = levelGenerator;
+        _factory = factory;
+        _input = input;
+        _uiService = uiService;
+
+        Initialize(_levelGenerator.Generate());
+    }
 
     private void Awake()
     {
@@ -46,18 +60,6 @@ public class Field : MonoBehaviour
     private void Update()
     {
         _input.GetInput();
-    }
-
-    [Inject]
-    public void Construct(CardsDatabase database, LevelGenerator levelGenerator, CardFactory factory, InputService input, UIService uiService)
-    {
-        _database = database;
-        _levelGenerator = levelGenerator;
-        _factory = factory;
-        _input = input;
-        _uiService = uiService;
-
-        Initialize(_levelGenerator.Generate());
     }
 
     public void ApplySize(Vector2 fieldSize)
@@ -121,9 +123,9 @@ public class Field : MonoBehaviour
 
     public void ShuffleCards()
     {
-        int childCount = transform.childCount - 1;
-        
-        if (childCount <= 1) 
+        int childCount = _cardsContainer.childCount - 1;
+
+        if (childCount <= 1)
             return;
 
         List<Transform> cards = new List<Transform>();
@@ -132,8 +134,8 @@ public class Field : MonoBehaviour
 
         for (int i = 1; i <= childCount; i++)
         {
-            Transform card = transform.GetChild(i);
-            
+            Transform card = _cardsContainer.GetChild(i);
+
             cards.Add(card);
             positions.Add(card.localPosition);
             siblingIndices.Add(card.GetSiblingIndex());
@@ -143,12 +145,12 @@ public class Field : MonoBehaviour
         {
             int randomIndex = UnityEngine.Random.Range(0, i + 1);
             Vector3 tempPos = positions[i];
-            
+
             positions[i] = positions[randomIndex];
             positions[randomIndex] = tempPos;
 
             int tempIndex = siblingIndices[i];
-            
+
             siblingIndices[i] = siblingIndices[randomIndex];
             siblingIndices[randomIndex] = tempIndex;
         }
@@ -167,7 +169,7 @@ public class Field : MonoBehaviour
     {
         AddCard(card);
 
-         _clearContainer.AddNewCard(card);
+        _clearContainer.AddNewCard(card);
     }
 
     private void ClearField()
@@ -190,10 +192,14 @@ public class Field : MonoBehaviour
         {
             Vector2 uiPos = GetCanvasPosition(node, _width, _height);
 
-            if (uiPos.x < minX) minX = uiPos.x;
-            if (uiPos.x + _width > maxX) maxX = uiPos.x + _width;
-            if (uiPos.y < minY) minY = uiPos.y;
-            if (uiPos.y + _height > maxY) maxY = uiPos.y + _height;
+            if (uiPos.x < minX)
+                minX = uiPos.x;
+            if (uiPos.x + _width > maxX)
+                maxX = uiPos.x + _width;
+            if (uiPos.y < minY)
+                minY = uiPos.y;
+            if (uiPos.y + _height > maxY)
+                maxY = uiPos.y + _height;
         }
 
         float centerX = (minX + maxX) / _centerCoefficient;
@@ -202,7 +208,7 @@ public class Field : MonoBehaviour
 
         foreach (var node in nodes)
         {
-            Card card = _factory.Create(node.CardTypeId, transform);
+            Card card = _factory.Create(node.CardTypeId, _cardsContainer);
             RectTransform cardRect = card.GetComponent<RectTransform>();
 
             if (cardRect != null)
@@ -231,7 +237,7 @@ public class Field : MonoBehaviour
     private Rect GetScreenRect(RectTransform rectTransform)
     {
         Vector3[] corners = new Vector3[4];
-        
+
         rectTransform.GetWorldCorners(corners);
 
         Canvas canvas = rectTransform.GetComponentInParent<Canvas>();
@@ -242,7 +248,7 @@ public class Field : MonoBehaviour
 
         float width = screenCorner2.x - screenCorner0.x;
         float height = screenCorner2.y - screenCorner0.y;
-        
+
         float newWidth = width * _sizeMultiplier;
         float newHeight = height * _sizeMultiplier;
 

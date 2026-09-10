@@ -12,10 +12,20 @@ public class LevelGenerator
     private int _gridHeight;
     private int _maxLayers;
 
+    private LevelShape _shape;
+
     private CardNode[,,] _levelGrid;
     private int tripletInt = 3;
 
     private List<CardNode> _generatedCards;
+
+    public enum LevelShape
+    {
+        Rectangle,
+        Circle,
+        Diamond,
+        Triangle,
+    }
 
     [Inject]
     public void Construct(int totalTriplets, int uniqueTypes, int bankSize, int gridWidth, int gridHeight, int maxLayers)
@@ -32,6 +42,7 @@ public class LevelGenerator
         _gridWidth = gridWidth;
         _gridHeight = gridHeight;
         _maxLayers = maxLayers;
+        _shape = LevelShape.Rectangle;
     }
 
     public List<CardNode> Generate()
@@ -39,24 +50,24 @@ public class LevelGenerator
         int totalCards = _totalTriplets * tripletInt;
         _levelGrid = new CardNode[_gridWidth, _gridHeight, _maxLayers];
         _generatedCards = new List<CardNode>();
-                
+
         List<int> cardPool = CreateCardPool();
         List<int> reverseBank = new List<int>();
-                
+
         while (cardPool.Count > 0 || reverseBank.Count > 0)
         {
             if (reverseBank.Count <= _bankSize - tripletInt && cardPool.Count >= tripletInt)
             {
                 int typeId = cardPool[0];
-            
-                for (int i = 0; i < tripletInt; i++) 
+
+                for (int i = 0; i < tripletInt; i++)
                     reverseBank.Add(typeId);
-                
+
                 cardPool.RemoveRange(0, tripletInt);
             }
 
             if (reverseBank.Count == 0)
-                break;            
+                break;
 
             int cardIndexToPlace = Random.Range(0, reverseBank.Count);
             int currentTypeId = reverseBank[cardIndexToPlace];
@@ -71,7 +82,7 @@ public class LevelGenerator
                 {
                     GridPosition = pos,
                     CardTypeId = currentTypeId,
-                    IsOccupied = true
+                    IsOccupied = true,
                 };
 
                 _levelGrid[pos.x, pos.y, pos.z] = newNode;
@@ -131,9 +142,10 @@ public class LevelGenerator
 
             for (int j = 0; j < 3; j++)
             {
-                int temp = pool[i * 3 + j];
-                pool[i * 3 + j] = pool[randomIndex * 3 + j];
-                pool[randomIndex * 3 + j] = temp;
+                int temp = pool[(i * 3) + j];
+
+                pool[(i * 3) + j] = pool[(randomIndex * 3) + j];
+                pool[(randomIndex * 3) + j] = temp;
             }
         }
 
@@ -143,7 +155,7 @@ public class LevelGenerator
     private Vector3Int? FindAvailablePositionForReverse()
     {
         bool isFirstCard = true;
-        
+
         for (int z = 0; z < _maxLayers; z++)
         {
             for (int x = 0; x < _gridWidth; x++)
@@ -157,46 +169,65 @@ public class LevelGenerator
                     }
                 }
 
-                if (isFirstCard == false) 
+                if (isFirstCard == false)
                     break;
             }
         }
 
         if (isFirstCard)
         {
-            int centerX = (_gridWidth / 4) * 2;
-            int centerY = (_gridHeight / 4) * 2;
-
-            return new Vector3Int(centerX, centerY, 0);
+            return GetFirstCard();
         }
 
         List<Vector3Int> validPositions = new List<Vector3Int>();
 
         for (int z = 0; z < _maxLayers; z++)
         {
-            for (int x = 0; x < _gridWidth - 2; x++)
+            for (int x = 0; x < _gridWidth; x++)
             {
-                for (int y = 0; y < _gridHeight - 2; y++)
+                for (int y = 0; y < _gridHeight; y++)
                 {
-                    if (_levelGrid[x, y, z] == null && !IsPositionBlockedFromAbove(x, y, z))
+                    if (IsPositionInsideShape(x, y) == false)
+                        continue;
+
+                    if (_levelGrid[x, y, z] == null && IsPositionBlockedFromAbove(x, y, z) == false)
                     {
-                        if (z % 2 == 0 && (x % 2 != 0 || y % 2 != 0)) 
-                            continue;
-                        
-                        if (z % 2 != 0 && (x % 2 == 0 || y % 2 == 0)) 
+                        if ((z % 2 == 0 && (x % 2 != 0 || y % 2 != 0)) ||
+                            (z % 2 != 0 && (x % 2 == 0 || y % 2 == 0)))
                             continue;
 
                         if (HasNeighborOrSupport(x, y, z))
-                            validPositions.Add(new Vector3Int(x, y, z));                        
+                            validPositions.Add(new Vector3Int(x, y, z));
                     }
                 }
             }
         }
 
         if (validPositions.Count > 0)
-            return validPositions[Random.Range(0, validPositions.Count)];        
+            return validPositions[Random.Range(0, validPositions.Count)];
 
         return null;
+    }
+
+    private Vector3Int? GetFirstCard()
+    {
+        int centerX = Mathf.RoundToInt(_gridWidth / 2f);
+        int centerY = Mathf.RoundToInt(_gridHeight / 2f);
+        int startZ = 0;
+
+        switch (_shape)
+        {
+            case LevelShape.Circle:
+            case LevelShape.Diamond:
+                return new Vector3Int(centerX, centerY, startZ);
+            case LevelShape.Triangle:
+                int triangleY = Mathf.RoundToInt(_gridHeight * 0.33f);
+
+                return new Vector3Int(centerX, triangleY, startZ);
+            case LevelShape.Rectangle:
+            default:
+                return new Vector3Int(centerX, centerY, startZ);
+        }
     }
 
     private bool HasNeighborOrSupport(int x, int y, int z)
@@ -204,7 +235,7 @@ public class LevelGenerator
         if (z > 0)
         {
             int lowerZ = z - 1;
-        
+
             for (int dx = -1; dx <= 1; dx++)
             {
                 for (int dy = -1; dy <= 1; dy++)
@@ -214,28 +245,28 @@ public class LevelGenerator
 
                     if (cx >= 0 && cx < _gridWidth && cy >= 0 && cy < _gridHeight)
                     {
-                        if (_levelGrid[cx, cy, lowerZ] != null) 
+                        if (_levelGrid[cx, cy, lowerZ] != null)
                             return true;
                     }
                 }
             }
         }
-                        
+
         int[] offsets = { -2, 2 };
-        
+
         foreach (int dx in offsets)
         {
             int cx = x + dx;
 
-            if (cx >= 0 && cx < _gridWidth && _levelGrid[cx, y, z] != null) 
+            if (cx >= 0 && cx < _gridWidth && _levelGrid[cx, y, z] != null)
                 return true;
         }
 
         foreach (int dy in offsets)
         {
             int cy = y + dy;
-            
-            if (cy >= 0 && cy < _gridHeight && _levelGrid[x, cy, z] != null) 
+
+            if (cy >= 0 && cy < _gridHeight && _levelGrid[x, cy, z] != null)
                 return true;
         }
 
@@ -253,14 +284,46 @@ public class LevelGenerator
                     int checkX = x + dx;
                     int checkY = y + dy;
 
-                    if (checkX >= 0 && checkX < _gridWidth && checkY >= 0 && checkY < _gridHeight && 
+                    if (checkX >= 0 && checkX < _gridWidth &&
+                        checkY >= 0 && checkY < _gridHeight &&
                         _levelGrid[checkX, checkY, upperZ] != null)
-                        
+                    {
                         return true;
+                    }
                 }
             }
         }
 
         return false;
+    }
+
+    private bool IsPositionInsideShape(int x, int y)
+    {
+        float centerX = _gridWidth / 2f;
+        float centerY = _gridHeight / 2f;
+
+        switch (_shape)
+        {
+            case LevelShape.Circle:
+                float radius = Mathf.Min(centerX, centerY);
+                float distanceSquare = Mathf.Pow(x - centerX, 2) + Mathf.Pow(y - centerY, 2);
+
+                return distanceSquare <= Mathf.Pow(radius, 2);
+
+            case LevelShape.Diamond:
+                float maxRadiusX = centerX;
+                float maxRadiusY = centerY;
+
+                return (Mathf.Abs(x - centerX) / maxRadiusX) + (Mathf.Abs(y - centerY) / maxRadiusY) <= 1.0f;
+
+            case LevelShape.Triangle:
+                float normalizedY = (float)y / (_gridHeight - 1);
+                float halfWidthAtY = centerX * normalizedY;
+
+                return x >= (centerX - halfWidthAtY) && x <= (centerX + halfWidthAtY);
+            case LevelShape.Rectangle:
+            default:
+                return true;
+        }
     }
 }

@@ -7,9 +7,9 @@ using Zenject;
 public class WinGameScreen : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI _cardsCountText;
-    [SerializeField] private TextMeshProUGUI _coinsCountText;    
+    [SerializeField] private TextMeshProUGUI _coinsCountText;
 
-    [SerializeField] private AddCoinsButton _addCoinsButton;    
+    [SerializeField] private AddCoinsButton _addCoinsButton;
 
     [Inject] private Level _level;
     [Inject] private PlayerStats _stats;
@@ -20,22 +20,22 @@ public class WinGameScreen : MonoBehaviour
 
     private void OnEnable()
     {
-        int cardsCount = _level.CardsCount;        
+        int cardsCount = _level.CardsCount;
 
         _earnedCoins = cardsCount * _coinsFactor;
 
         _cardsCountText.text = $"x {cardsCount}";
-        _coinsCountText.text = $"x {_earnedCoins}";        
+        _coinsCountText.text = $"x {_earnedCoins}";
 
         _addCoinsButton.SetEnabled(true);
 
-        YG2.saves.coins += _earnedCoins;
-        YG2.saves.rating += cardsCount;
-        YG2.saves.level++;
+        YG2.saves.Coins += _earnedCoins;
+        YG2.saves.Rating += cardsCount;
+        YG2.saves.Level++;
         YG2.SaveProgress();
-        YG2.SetLeaderboard("Score", YG2.saves.rating);
+        YG2.SetLeaderboard("Score", YG2.saves.Rating);
 
-        _stats.currentCoins.Value = YG2.saves.coins;
+        _stats.CurrentCoins.Value = YG2.saves.Coins;
     }
 
     public void AddCoins(int coinsMultiplier)
@@ -51,9 +51,9 @@ public class WinGameScreen : MonoBehaviour
             })
             .SetEase(Ease.OutQuad);
 
-        YG2.saves.coins += _earnedCoins - currentCoins;
+        YG2.saves.Coins += _earnedCoins - currentCoins;
         YG2.SaveProgress();
 
-        _stats.currentCoins.Value = YG2.saves.coins;
+        _stats.CurrentCoins.Value = YG2.saves.Coins;
     }
 }

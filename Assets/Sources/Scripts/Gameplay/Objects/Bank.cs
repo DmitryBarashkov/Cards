@@ -1,20 +1,20 @@
-using DG.Tweening;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DG.Tweening;
 using UnityEngine;
 using Zenject;
 
 public class Bank : MonoBehaviour
 {
     [SerializeField] private List<Transform> _cells;
-    
+
     [Inject] private LevelState _state;
     [Inject] private Level _level;
     [Inject] private Field _field;
 
-    private List<Card> _cards = new();
+    private List<Card> _cards = new ();
 
     private Card[] _cardsToRemove;
     private Sequence _mainSequence;
@@ -24,7 +24,7 @@ public class Bank : MonoBehaviour
     private float _downScale = 0.1f;
 
     private int _similarCount = 3;
-    private int _minCleanCount = 3;    
+    private int _minCleanCount = 3;
 
     private int _bankSize = 5;
     private int _bankMaxSize = 7;
@@ -32,30 +32,34 @@ public class Bank : MonoBehaviour
     private Card _lastAddedCard;
 
     public int CardsCount => _cards.Count;
+
     public bool IsFull => _cards.Count == _bankSize;
+
     public bool CanUseCleaning => _cards.Count >= _minCleanCount;
+
     public bool CanUseCancel => _lastAddedCard != null;
-    public bool IsAllCellsEnabled => _bankSize == _bankMaxSize;    
+
+    public bool IsAllCellsEnabled => _bankSize == _bankMaxSize;
 
     public void AddNewCard(Card card)
     {
         _cards.Add(card);
-        _lastAddedCard = card;        
+        _lastAddedCard = card;
     }
 
     public void Clear()
     {
         foreach (Card card in _cards)
             Destroy(card.gameObject);
-        
-        _cards.Clear();        
+
+        _cards.Clear();
         ClearLastMove();
     }
 
     public void PartialClean()
     {
         for (int i = 0; i < _minCleanCount; i++)
-            _field.MoveToClearContainer(_cards[i]);        
+            _field.MoveToClearContainer(_cards[i]);
 
         _cards.RemoveRange(0, _minCleanCount);
 
@@ -70,7 +74,9 @@ public class Bank : MonoBehaviour
             UpdateCellsIcons();
         }
         else
+        {
             throw new ArgumentException("Нельзя увеличить банк выше максимума");
+        }
     }
 
     public void CancelMove()
@@ -79,9 +85,9 @@ public class Bank : MonoBehaviour
 
         if (_lastAddedCard.IsCleared)
             _field.MoveToClearContainer(_lastAddedCard);
-        else        
+        else
             _lastAddedCard.MoveToField();
-        
+
         ClearLastMove();
     }
 
@@ -90,7 +96,7 @@ public class Bank : MonoBehaviour
         TryClearSimilarCards();
 
         if (this.IsFull)
-            _level.ShowLoseScreen();        
+            _level.ShowLoseScreen();
         else if (_field.CardsCount == 0 && _cards.Count == 0)
             _level.ShowWinScreen();
     }
@@ -100,10 +106,10 @@ public class Bank : MonoBehaviour
         if (_mainSequence != null)
         {
             _mainSequence.Complete();
-            
+
             await SequenceCallback();
-        }        
-        
+        }
+
         foreach (var cell in _cells)
         {
             if (cell.childCount == 0)
@@ -117,7 +123,7 @@ public class Bank : MonoBehaviour
     {
         if (_cards.Count < _similarCount)
             return;
-        
+
         var matchGroup = _cards
             .GroupBy(card => card.Id)
             .FirstOrDefault(group => group.Count() >= _similarCount);
@@ -125,7 +131,8 @@ public class Bank : MonoBehaviour
         if (matchGroup == null)
             return;
 
-        _cardsToRemove = matchGroup.ToArray();        
+        _cardsToRemove = matchGroup.ToArray();
+
         _mainSequence = DOTween.Sequence();
 
         foreach (Card card in _cardsToRemove)
@@ -138,9 +145,11 @@ public class Bank : MonoBehaviour
             _mainSequence.Insert(_duration, cardTransform.DOScale(_downScale, _duration).SetEase(Ease.InQuad));
         }
 
-        _mainSequence.OnComplete(() =>
+        _mainSequence.OnComplete(async () =>
         {
-            SequenceCallback();
+            await SequenceCallback();
+
+            _state.CardsCount.Value -= _similarCount;
         });
     }
 
@@ -149,7 +158,7 @@ public class Bank : MonoBehaviour
         for (int i = 0; i < _cards.Count; i++)
         {
             _cards[i].transform.SetParent(_cells[i]);
-            _cards[i].transform.localPosition = Vector3.zero;            
+            _cards[i].transform.localPosition = Vector3.zero;
         }
 
         ClearLastMove();
@@ -158,7 +167,7 @@ public class Bank : MonoBehaviour
     private async Task SequenceCallback()
     {
         foreach (Card card in _cardsToRemove)
-            Destroy(card.gameObject);        
+            Destroy(card.gameObject);
 
         Array.Resize(ref _cardsToRemove, 0);
 
@@ -166,13 +175,11 @@ public class Bank : MonoBehaviour
 
         if (_cards.Count > 0)
             SetCardsInCells();
-
-        _state.CardsCount.Value -= _similarCount;
     }
 
     private void ClearLastMove()
     {
-        _lastAddedCard = null;        
+        _lastAddedCard = null;
     }
 
     private void UpdateCellsIcons()

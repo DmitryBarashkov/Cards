@@ -7,13 +7,14 @@
     false,
     false
   ],
-  "idSave": 49,
-  "level": 28,
-  "coins": 135,
-  "rating": 315,
-  "shuffles": 2,
-  "cleanings": 0,
-  "cancels": 3,
-  "isAdsDisabled": false,
-  "isSoundOn": false
+  "idSave": 69,
+  "Level": 39,
+  "Coins": 450,
+  "Rating": 630,
+  "Shuffles": 2,
+  "Cleanings": 0,
+  "Cancels": 3,
+  "IsAdsDisabled": false,
+  "IsBeginnerSetBought": false,
+  "IsSoundOn": true
 }

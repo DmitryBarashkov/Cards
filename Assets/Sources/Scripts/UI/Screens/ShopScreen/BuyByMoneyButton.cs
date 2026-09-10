@@ -9,7 +9,7 @@ public class BuyByMoneyButton : UIButton
     [SerializeField] private TextMeshProUGUI _priceText;
 
     [Inject] private ShopService _service;
-    
+
     protected override void OnEnable()
     {
         _button.onClick.AddListener(HandleClick);

@@ -11,14 +11,16 @@ public class ClearBankButton : UIButton
     {
         if (_bank.CanUseCleaning == false)
             return;
-        
-        if (_stats.currentCleanings.Value > 0)
+
+        if (_stats.CurrentCleanings.Value > 0)
         {
-            YG2.saves.cleanings--;
-            _stats.currentCleanings.Value--;
+            YG2.saves.Cleanings--;
+            _stats.CurrentCleanings.Value--;
             _bank.PartialClean();
         }
         else
+        {
             _shopService.ShowBuyScreen(ControlType.Cleanings);
+        }
     }
 }

@@ -17,8 +17,8 @@ public class AddClearButton : ToggleButton
 
     private void AddReward()
     {
-        YG2.saves.cleanings++;
-        _playerStats.currentCleanings.Value++;
+        YG2.saves.Cleanings++;
+        _playerStats.CurrentCleanings.Value++;
         SetEnabled(false);
     }
 }

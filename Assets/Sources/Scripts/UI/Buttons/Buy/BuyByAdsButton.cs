@@ -1,8 +1,10 @@
+using UnityEngine;
 using YG;
 using Zenject;
 
 public class BuyByAdsButton : UIButton
 {
+    [SerializeField] private UIScreen _screen;
     [Inject] private PlayerStats _playerStats;
 
     private string _rewardId;
@@ -23,7 +25,7 @@ public class BuyByAdsButton : UIButton
                 _rewardId = "AddCancels";
                 break;
             default:
-                _rewardId = "";
+                _rewardId = string.Empty;
                 break;
         }
     }
@@ -37,6 +39,8 @@ public class BuyByAdsButton : UIButton
     public override void HandleClick()
     {
         Utils.ShowAdvForReward(_audioService, _rewardId, AddReward);
+
+        _screen.Close();
     }
 
     private void AddReward()
@@ -44,20 +48,20 @@ public class BuyByAdsButton : UIButton
         switch (_rewardId)
         {
             case "AddShuffles":
-                YG2.saves.shuffles++;
-                _playerStats.currentShuffles.Value++;
+                YG2.saves.Shuffles++;
+                _playerStats.CurrentShuffles.Value++;
                 break;
             case "AddCleanings":
-                YG2.saves.cleanings++;
-                _playerStats.currentCleanings.Value++;
+                YG2.saves.Cleanings++;
+                _playerStats.CurrentCleanings.Value++;
                 break;
             case "AddCancels":
-                YG2.saves.cancels += _cancelCount;
-                _playerStats.currentCancels.Value = YG2.saves.cancels;
+                YG2.saves.Cancels += _cancelCount;
+                _playerStats.CurrentCancels.Value = YG2.saves.Cancels;
                 break;
             case "AddCoins":
-                YG2.saves.coins += _coinsCount;
-                _playerStats.currentCoins.Value = YG2.saves.coins;
+                YG2.saves.Coins += _coinsCount;
+                _playerStats.CurrentCoins.Value = YG2.saves.Coins;
                 break;
             default:
                 break;

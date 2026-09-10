@@ -12,13 +12,15 @@ public class CancelMoveButton : UIButton
         if (_bank.CanUseCancel == false)
             return;
 
-        if (_stats.currentCancels.Value > 0)
+        if (_stats.CurrentCancels.Value > 0)
         {
-            YG2.saves.cancels--;
-            _stats.currentCancels.Value--;
+            YG2.saves.Cancels--;
+            _stats.CurrentCancels.Value--;
             _bank.CancelMove();
         }
         else
-            _shopService.ShowBuyScreen(ControlType.Cancels);        
+        {
+            _shopService.ShowBuyScreen(ControlType.Cancels);
+        }
     }
 }

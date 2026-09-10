@@ -1,13 +1,12 @@
-using System;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 
-public class SizeAdapter: ITickable
+public class SizeAdapter : ITickable
 {
     private CanvasScaler[] _canvasScalers;
     private Field _field;
-    
+
     private Vector2 _portraitResolution = new Vector2(1080, 1920);
     private Vector2 _albumResolution = new Vector2(1920, 1080);
     private Vector2 _portraitFieldSize = new Vector2(800, 1300);
@@ -33,7 +32,7 @@ public class SizeAdapter: ITickable
 
         foreach (CanvasScaler scaler in _canvasScalers)
             scaler.referenceResolution = isPortrait ? _portraitResolution : _albumResolution;
-        
+
         if (_field != null)
         {
             Vector2 fieldSize = isPortrait ? _portraitFieldSize : _albumFieldSize;

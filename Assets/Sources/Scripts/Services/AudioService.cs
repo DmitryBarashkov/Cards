@@ -10,56 +10,37 @@ public enum SoundType
     ButtonClick,
     ExpandPanel,
     Win,
-    Lose
-}
-
-[Serializable]
-public struct SoundData
-{
-    public SoundType Type;
-    public AudioClip Clip;
-}
-
-public interface IAudioService
-{
-    void Activate();
-    void Deactivate();
-    void PlaySound(SoundType type);
-    void PlayMusic();
-    void StopMusic();    
-
-    bool GetSoundOn();
-    void SetSound(bool value);
+    Lose,
 }
 
 public class AudioService : MonoBehaviour, IAudioService
 {
     [Header("Sources")]
     [SerializeField] private AudioSource _sfxSource;
-    [SerializeField] private AudioSource _musicSource;    
+    [SerializeField] private AudioSource _musicSource;
 
     [Header("Audio Clips")]
     [SerializeField] private List<SoundData> _sounds;
 
-    private bool _isSoundOn;    
+    private bool _isSoundOn;
 
     [Inject]
     public void Construct()
     {
-        _isSoundOn = YG2.saves.isSoundOn;
+        _isSoundOn = YG2.saves.IsSoundOn;
     }
 
     public void Activate()
     {
-        _sfxSource.enabled = true;        
+        _sfxSource.enabled = true;
         _musicSource.enabled = true;
-        
+
         PlayMusic();
     }
 
     public void Deactivate()
     {
-        _sfxSource.enabled = false;        
+        _sfxSource.enabled = false;
         _musicSource.enabled = false;
     }
 
@@ -72,7 +53,7 @@ public class AudioService : MonoBehaviour, IAudioService
     {
         _isSoundOn = value;
 
-        YG2.saves.isSoundOn = value;
+        YG2.saves.IsSoundOn = value;
         YG2.SaveProgress();
 
         if (_isSoundOn)
@@ -84,7 +65,7 @@ public class AudioService : MonoBehaviour, IAudioService
         else
         {
             _musicSource.enabled = false;
-            _sfxSource.enabled = false;                        
+            _sfxSource.enabled = false;
             StopMusic();
         }
     }
@@ -126,5 +107,12 @@ public class AudioService : MonoBehaviour, IAudioService
         }
 
         return sound.Clip;
+    }
+
+    [Serializable]
+    public struct SoundData
+    {
+        public SoundType Type;
+        public AudioClip Clip;
     }
 }

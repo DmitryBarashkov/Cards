@@ -1,3 +1,5 @@
 using UnityEngine;
 
-public class GameplayContainer : MonoBehaviour { }
+public class GameplayContainer : MonoBehaviour
+{
+}
