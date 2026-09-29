@@ -1,12 +1,15 @@
 using UnityEngine;
 
-public class LevelGeneratorButton : UIButton
+namespace Cards.UI
 {
-    [SerializeField] private LevelGeneratorScreen _screen;
-
-    public override void HandleClick()
+    public class LevelGeneratorButton : UIButton
     {
-        _screen.GenerateLevel();
-        _screen.Close();
+        [SerializeField] private LevelGeneratorScreen _screen;
+
+        public override void HandleClick()
+        {
+            _screen.GenerateLevel();
+            _screen.Close();
+        }
     }
 }

@@ -2,37 +2,40 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "InAppsDatabase", menuName = "Config/InApps Database")]
-public class InAppsDatabase : ScriptableObject
+namespace Cards.Databases
 {
-    public List<ProductItem> Products = new List<ProductItem>();
-
-    public void AddProductItem(string id, int price, string title, bool isOnceBuy = false)
+    [CreateAssetMenu(fileName = "InAppsDatabase", menuName = "Config/InApps Database")]
+    public class InAppsDatabase : ScriptableObject
     {
-        Products.Add(new ProductItem { Id = id, Price = price, Title = title, IsOnceBuy = isOnceBuy });
-    }
+        public List<ProductItem> Products = new List<ProductItem>();
 
-    public bool TryGetItem(string id, out ProductItem result)
-    {
-        foreach (var product in Products)
+        public void AddProductItem(string id, int price, string title, bool isOnceBuy = false)
         {
-            if (product.Id == id)
-            {
-                result = product;
-                return true;
-            }
+            Products.Add(new ProductItem { Id = id, Price = price, Title = title, IsOnceBuy = isOnceBuy });
         }
 
-        result = default;
-        return false;
-    }
+        public bool TryGetItem(string id, out ProductItem result)
+        {
+            foreach (var product in Products)
+            {
+                if (product.Id == id)
+                {
+                    result = product;
+                    return true;
+                }
+            }
 
-    [Serializable]
-    public struct ProductItem
-    {
-        public string Id;
-        public int Price;
-        public string Title;
-        public bool IsOnceBuy;
+            result = default;
+            return false;
+        }
+
+        [Serializable]
+        public struct ProductItem
+        {
+            public string Id;
+            public int Price;
+            public string Title;
+            public bool IsOnceBuy;
+        }
     }
 }

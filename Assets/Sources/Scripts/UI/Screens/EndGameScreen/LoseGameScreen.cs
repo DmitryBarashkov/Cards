@@ -1,29 +1,22 @@
+using Cards.Gameplay;
 using TMPro;
 using UnityEngine;
 using Zenject;
 
-public class LoseGameScreen : MonoBehaviour
+namespace Cards.UI
 {
-    [SerializeField] private AddCellButton _addCellButton;
-    [SerializeField] private AddClearButton _clearbutton;
-    [SerializeField] private AddCancelButton _cancelButton;
-    [SerializeField] private TextMeshProUGUI _text;
-
-    [Inject] private Bank _bank;
-
-    private void OnEnable()
+    public class LoseGameScreen : MonoBehaviour
     {
-        if (_bank.IsAllCellsEnabled)
-        {
-            _addCellButton.gameObject.SetActive(false);
-            _text.gameObject.SetActive(false);
-        }
-        else
-        {
-            _addCellButton.SetEnabled(true);
-        }
+        [SerializeField] private AddClearButton _clearbutton;
+        [SerializeField] private AddCancelButton _cancelButton;
+        [SerializeField] private TextMeshProUGUI _text;
 
-        _clearbutton.SetEnabled(true);
-        _cancelButton.SetEnabled(true);
+        [Inject] private Bank _bank;
+
+        private void OnEnable()
+        {
+            _clearbutton.SetEnabled(true);
+            _cancelButton.SetEnabled(true);
+        }
     }
 }

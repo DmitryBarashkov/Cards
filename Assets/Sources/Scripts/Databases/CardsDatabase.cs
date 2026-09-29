@@ -2,31 +2,34 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "CardsDatabase", menuName = "Config/Cards Database")]
-public class CardsDatabase : ScriptableObject
+namespace Cards.Databases
 {
-    [Header("Card Types")]
-    public List<CardType> CardTypes;
-
-    public bool TryGetCard(int id, out CardType result)
+    [CreateAssetMenu(fileName = "CardsDatabase", menuName = "Config/Cards Database")]
+    public class CardsDatabase : ScriptableObject
     {
-        foreach (var card in CardTypes)
+        [Header("Card Types")]
+        public List<CardType> CardTypes;
+
+        public bool TryGetCard(int id, out CardType result)
         {
-            if (card.Id == id)
+            foreach (var card in CardTypes)
             {
-                result = card;
-                return true;
+                if (card.Id == id)
+                {
+                    result = card;
+                    return true;
+                }
             }
+
+            result = default;
+            return false;
         }
 
-        result = default;
-        return false;
-    }
-
-    [Serializable]
-    public struct CardType
-    {
-        public int Id;
-        public Sprite Sprite;
+        [Serializable]
+        public struct CardType
+        {
+            public int Id;
+            public Sprite Sprite;
+        }
     }
 }

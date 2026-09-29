@@ -1,129 +1,140 @@
 using System;
+using Cards.Gameplay;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using YG;
 using Zenject;
 
-public class AdService : ITickable, IDisposable
+namespace Cards.Services
 {
-    private GameObject _adWarningPanel;
-    private TextMeshProUGUI _countText;
-
-    private Level _level;
-
-    private int _countdownDuration = 3;
-
-    private float _timer;
-    private bool _isCountingDown;
-    private bool _isActive = true;
-
-    private float _punchScaleFactor = 1.3f;
-    private float _punchDuration = 0.3f;
-    private int _lastDisplayedSecond = -1;
-
-    [Inject]
-    public void Construct(
-        Level level,
-        [Inject(Id = "AdWarning")] GameObject adWarningPanel,
-        [Inject(Id = "AdvCountText")] TextMeshProUGUI countText)
+    public class AdService : ITickable, IDisposable
     {
-        _level = level;
-        _adWarningPanel = adWarningPanel;
-        _countText = countText;
+        private const float ShowAdTime = 300f;
 
-        YG2.onCloseInterAdv += ResetShowAd;
-        YG2.onErrorInterAdv += ResetShowAd;
-    }
+        private GameObject _adWarningPanel;
+        private TextMeshProUGUI _countText;
 
-    public void Tick()
-    {
-        if (YG2.saves.IsAdsDisabled || _isActive == false)
-            return;
+        private Level _level;
 
-        if (_isCountingDown)
+        private int _countdownDuration = 3;
+
+        private float _timer;
+        private float _showTimer;
+        private bool _isCountingDown;
+        private bool _isActive = true;
+
+        private float _punchScaleFactor = 1.3f;
+        private float _punchDuration = 0.3f;
+        private int _lastDisplayedSecond = -1;
+
+        [Inject]
+        public void Construct(
+            Level level,
+            [Inject(Id = "AdWarning")] GameObject adWarningPanel,
+            [Inject(Id = "AdvCountText")] TextMeshProUGUI countText)
         {
-            ShowAdCounter();
-            return;
+            _level = level;
+            _adWarningPanel = adWarningPanel;
+            _countText = countText;
+            _showTimer = ShowAdTime;
+
+            YG2.onCloseInterAdv += ResetShowAd;
+            YG2.onErrorInterAdv += ResetShowAd;
         }
 
-        if (_isCountingDown == false && _level.IsActive && YG2.isTimerAdvCompleted)
-            StartAdCountDown();
-    }
-
-    public void SetActive(bool value)
-    {
-        _isActive = value;
-    }
-
-    public void Dispose()
-    {
-        YG2.onCloseInterAdv -= ResetShowAd;
-        YG2.onErrorInterAdv -= ResetShowAd;
-    }
-
-    private void PerformTextAnimation()
-    {
-        if (_countText == null)
-            return;
-
-        _countText.text = _lastDisplayedSecond.ToString();
-        _countText.transform.localScale = Vector3.one;
-        _countText.transform.DOKill();
-
-        _countText.transform.DOPunchScale(Vector3.one * (_punchScaleFactor - 1f), _punchDuration, 0, 0)
-            .SetUpdate(true);
-    }
-
-    private void ShowAdCounter()
-    {
-        _timer -= Time.unscaledDeltaTime;
-
-        if (_timer > 0)
+        public void Tick()
         {
-            int currentSecond = Mathf.CeilToInt(_timer);
+            if (YG2.saves.IsAdsDisabled || _isActive == false)
+                return;
 
-            if (currentSecond != _lastDisplayedSecond)
+            _showTimer -= Time.deltaTime;
+
+            if (_isCountingDown)
             {
-                _lastDisplayedSecond = currentSecond;
-                PerformTextAnimation();
+                ShowAdCounter();
+                return;
+            }
+
+            if (_isCountingDown == false && _level.IsActive && YG2.isTimerAdvCompleted && _showTimer <= 0)
+                StartAdCountDown();
+        }
+
+        public void SetActive(bool value)
+        {
+            _isActive = value;
+        }
+
+        public void Dispose()
+        {
+            YG2.onCloseInterAdv -= ResetShowAd;
+            YG2.onErrorInterAdv -= ResetShowAd;
+        }
+
+        private void PerformTextAnimation()
+        {
+            if (_countText == null)
+                return;
+
+            _countText.text = _lastDisplayedSecond.ToString();
+            _countText.transform.localScale = Vector3.one;
+            _countText.transform.DOKill();
+
+            _countText.transform.DOPunchScale(Vector3.one * (_punchScaleFactor - 1f), _punchDuration, 0, 0)
+                .SetUpdate(true);
+        }
+
+        private void ShowAdCounter()
+        {
+            _timer -= Time.unscaledDeltaTime;
+
+            if (_timer > 0)
+            {
+                int currentSecond = Mathf.CeilToInt(_timer);
+
+                if (currentSecond != _lastDisplayedSecond)
+                {
+                    _lastDisplayedSecond = currentSecond;
+                    PerformTextAnimation();
+                }
+            }
+            else
+            {
+                _isCountingDown = false;
+
+                if (_adWarningPanel != null)
+                    _adWarningPanel.SetActive(false);
+
+                if (_countText != null)
+                    _countText.transform.DOKill();
+
+                YG2.InterstitialAdvShow();
             }
         }
-        else
+
+        private void StartAdCountDown()
+        {
+            if (_isCountingDown)
+                return;
+
+            _timer = _countdownDuration;
+            _isCountingDown = true;
+            _lastDisplayedSecond = _countdownDuration;
+
+            if (_adWarningPanel != null)
+                _adWarningPanel.SetActive(true);
+
+            PerformTextAnimation();
+        }
+
+        private void ResetShowAd()
         {
             _isCountingDown = false;
+            _lastDisplayedSecond = -1;
+            _showTimer = ShowAdTime;
 
             if (_adWarningPanel != null)
                 _adWarningPanel.SetActive(false);
-
-            if (_countText != null)
-                _countText.transform.DOKill();
-
-            YG2.InterstitialAdvShow();
         }
-    }
-
-    private void StartAdCountDown()
-    {
-        if (_isCountingDown)
-            return;
-
-        _timer = _countdownDuration;
-        _isCountingDown = true;
-        _lastDisplayedSecond = _countdownDuration;
-
-        if (_adWarningPanel != null)
-            _adWarningPanel.SetActive(true);
-
-        PerformTextAnimation();
-    }
-
-    private void ResetShowAd()
-    {
-        _isCountingDown = false;
-        _lastDisplayedSecond = -1;
-
-        if (_adWarningPanel != null)
-            _adWarningPanel.SetActive(false);
     }
 }
