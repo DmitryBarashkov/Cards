@@ -12,9 +12,7 @@ public class NextLevelButton : UIButton
 
     public override void HandleClick()
     {
-        YG2.InterstitialAdvShow();
-
-        _level.Restart();
+        _level.StartNextLevel();
         _screen.Close();
     }
 }

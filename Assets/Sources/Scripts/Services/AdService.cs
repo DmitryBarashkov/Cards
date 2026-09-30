@@ -11,6 +11,7 @@ namespace Cards.Services
     public class AdService : ITickable, IDisposable
     {
         private const float ShowAdTime = 300f;
+        private const int MaxLevelWithoutAds = 3;
 
         private GameObject _adWarningPanel;
         private TextMeshProUGUI _countText;
@@ -45,7 +46,7 @@ namespace Cards.Services
 
         public void Tick()
         {
-            if (YG2.saves.IsAdsDisabled || _isActive == false)
+            if (YG2.saves.IsAdsDisabled || _isActive == false || YG2.saves.Level <= MaxLevelWithoutAds)
                 return;
 
             _showTimer -= Time.deltaTime;
@@ -63,6 +64,12 @@ namespace Cards.Services
         public void SetActive(bool value)
         {
             _isActive = value;
+        }
+
+        public void ShowInterstitialAdv()
+        {
+            if (YG2.saves.Level > MaxLevelWithoutAds)
+            YG2.InterstitialAdvShow();
         }
 
         public void Dispose()

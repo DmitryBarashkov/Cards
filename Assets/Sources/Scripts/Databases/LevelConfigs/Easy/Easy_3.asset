@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Easy_3
   m_EditorClassIdentifier: 
   LevelDifficulty: 0
+  LevelNumber: 3
   TotalTriplets: 10
   UniqueTypesCount: 4
   BankSize: 7

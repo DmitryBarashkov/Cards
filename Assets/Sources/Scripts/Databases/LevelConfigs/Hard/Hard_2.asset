@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8342933753852ca4daae224630f57799, type: 3}
   m_Name: Hard_2
   m_EditorClassIdentifier: 
-  LevelDifficulty: 0
+  LevelDifficulty: 2
+  LevelNumber: 12
   TotalTriplets: 10
   UniqueTypesCount: 4
   BankSize: 7

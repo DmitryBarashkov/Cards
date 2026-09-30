@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using Cards.Databases;
+using Cards.Services;
 using UnityEngine;
+using YG;
 using Zenject;
 
 public class GlobalInstaller : MonoInstaller
@@ -12,12 +14,15 @@ public class GlobalInstaller : MonoInstaller
 
     [Header("Languages flags")]
     [SerializeField] private List<LanguageSpritePair> _languageFlags;
+    [Header("LevelConfigs")]
+    [SerializeField] private List<LevelConfig> _levelConfigs;
 
     public override void InstallBindings()
     {
         Container.Bind<CardsDatabase>().FromInstance(_cardsDatabase).AsSingle().NonLazy();
         Container.Bind<InAppsDatabase>().FromInstance(_inAppDatabase).AsSingle().NonLazy();
         Container.Bind<InputService>().AsSingle().NonLazy();
+        Container.Bind<LoadLevelService>().AsSingle().WithArguments(_levelConfigs).NonLazy();
 
         Container.BindInterfacesAndSelfTo<AudioService>()
             .FromComponentInNewPrefab(_audioServicePrefab)

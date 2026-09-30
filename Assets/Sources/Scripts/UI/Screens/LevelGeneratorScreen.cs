@@ -1,3 +1,4 @@
+using Cards.Databases;
 using Cards.Gameplay;
 using TMPro;
 using UnityEngine;
@@ -20,15 +21,17 @@ namespace Cards.UI
 
         public void GenerateLevel()
         {
-            _generator.SetGeneratorParams(
-                int.Parse(_triplets.text),
-                int.Parse(_uniqueCards.text),
-                int.Parse(_bankSize.text),
-                int.Parse(_width.text),
-                int.Parse(_height.text),
-                int.Parse(_maxLayers.text),
-                (LevelShape)_shape.value);
+            LevelConfig config = ScriptableObject.CreateInstance<LevelConfig>();
 
+            config.TotalTriplets = int.Parse(_triplets.text);
+            config.UniqueTypesCount = int.Parse(_uniqueCards.text);
+            config.BankSize = int.Parse(_bankSize.text);
+            config.GridWidth = int.Parse(_width.text);
+            config.GridHeight = int.Parse(_height.text);
+            config.MaxLayers = int.Parse(_maxLayers.text);
+            config.Shape = (LevelShape)_shape.value;
+
+            _generator.SetGeneratorParams(config);
             _field.Initialize(_generator.Generate());
         }
     }

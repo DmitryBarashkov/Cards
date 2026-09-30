@@ -14,6 +14,7 @@ namespace Cards.Installers
         [Header("Префабы объектов")]
         [SerializeField] private Bank _bankPrefab;
         [SerializeField] private Field _fieldPrefab;
+        [SerializeField] private Card _cardPrefab;
 
         [Header("Префабы экранов")]
         [SerializeField] private UIScreen _winGameScreen;
@@ -37,6 +38,7 @@ namespace Cards.Installers
         private int _shuffles;
         private int _cleanings;
         private int _cancels;
+        private int _levelNumber;
 
         public override void InstallBindings()
         {
@@ -102,10 +104,14 @@ namespace Cards.Installers
 
         private void BindLevel()
         {
+            Container.Bind<CardFactory>().AsSingle().WithArguments(_cardPrefab);
+            Container.Bind<CardNode>().AsTransient();
+            Container.Bind<LevelGenerator>().AsSingle().NonLazy();
+
             Container.Bind<LevelState>().AsSingle().NonLazy();
             Container.Bind<Level>()
                 .AsSingle()
-                .WithArguments(YG2.saves.Level)
+                .WithArguments(_levelNumber)
                 .NonLazy();
         }
 
@@ -132,6 +138,7 @@ namespace Cards.Installers
             _shuffles = YG2.saves.Shuffles;
             _cleanings = YG2.saves.Cleanings;
             _cancels = YG2.saves.Cancels;
+            _levelNumber = YG2.saves.Level;
         }
 
         private void BindPlayer()

@@ -76,6 +76,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _audioServicePrefab: {fileID: 1058407200004761399, guid: 01f04beca08063443a63150199bfbe92, type: 3}
   _cardsDatabase: {fileID: 11400000, guid: 798f829cda9f78b4f97fd0894636bdea, type: 2}
+  _inAppDatabase: {fileID: 0}
   _languageFlags:
   - LanguageCode: ru
     Sprite: {fileID: 21300000, guid: 7af9652001132497ba7088f0b27ebe03, type: 3}
@@ -83,3 +84,21 @@ MonoBehaviour:
     Sprite: {fileID: 21300000, guid: 77a9d892ce0a9494388c3e8e2c94b25e, type: 3}
   - LanguageCode: tr
     Sprite: {fileID: 21300000, guid: f96ed64c1140a44688663b65a678910a, type: 3}
+  _levelConfigs:
+  - {fileID: 11400000, guid: 82e9e76a49b5dd045b368d808775f847, type: 2}
+  - {fileID: 11400000, guid: 8c07cc913612e9749bd1edff7629dc2b, type: 2}
+  - {fileID: 11400000, guid: a15ca5c2b8aa0824c92a493e3c257db5, type: 2}
+  - {fileID: 11400000, guid: 7a4f540dcfcaefd49bf5055edbdc5634, type: 2}
+  - {fileID: 11400000, guid: 604909a3ffbb047498dff831f3f8c89d, type: 2}
+  - {fileID: 11400000, guid: e5892d8f41e13094fbec853da89d316b, type: 2}
+  - {fileID: 11400000, guid: 1e0b747966d29ca48a4be9ca79aba009, type: 2}
+  - {fileID: 11400000, guid: ea7161cebed622b4c8dd7990d067974f, type: 2}
+  - {fileID: 11400000, guid: c81a34796b5b28840844b19b2ca3e862, type: 2}
+  - {fileID: 11400000, guid: e06a2195e9663dd499f1de2cbcb28ac5, type: 2}
+  - {fileID: 11400000, guid: 3137cf02607536749aefd901e0ff3b88, type: 2}
+  - {fileID: 11400000, guid: 2e09b540e74cfcd4aac535066d923c0b, type: 2}
+  - {fileID: 11400000, guid: 6f6dae6101a31034090340cf86cd0103, type: 2}
+  - {fileID: 11400000, guid: 1d333dcc80ae976499780de0789c76f5, type: 2}
+  - {fileID: 11400000, guid: 56a5d109f3759bd4d8f411a3152176e8, type: 2}
+  - {fileID: 11400000, guid: 3e6cf0333e3b74441979921a28c47f97, type: 2}
+  - {fileID: 11400000, guid: 1de17a94d1021d34ca7a8b7c19ed4de0, type: 2}

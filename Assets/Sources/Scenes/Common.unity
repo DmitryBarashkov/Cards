@@ -3472,6 +3472,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _bankPrefab: {fileID: 6077934963625679421, guid: 3af38896ea5f5b142a2e1e03fa9d695b, type: 3}
   _fieldPrefab: {fileID: 6389005107029224742, guid: 66d858dd465a3854e95bd3ca8ac9d427, type: 3}
+  _cardPrefab: {fileID: 2660081592450643855, guid: 550d66419f997654c99f426e44d61f7a, type: 3}
   _winGameScreen: {fileID: 3610180943061351411, guid: daa224f45946c08468a9dc9024fa6c84, type: 3}
   _loseGameScreen: {fileID: 1959870176079970019, guid: 4def4fcd9572075489afbdcc623a5592, type: 3}
   _shopScreen: {fileID: 5488598845216223490, guid: 2eb74d94183bc5b4b91126d2781cfe66, type: 3}
@@ -3596,7 +3597,6 @@ MonoBehaviour:
   _scriptableObjectInstallers: []
   _monoInstallers:
   - {fileID: 1167479279}
-  - {fileID: 2074842640}
   _installerPrefabs: []
   _autoRun: 1
   OnPreInstall:
@@ -3628,7 +3628,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1167479278}
-  - {fileID: 2074842639}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1309542767
@@ -5463,58 +5462,6 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
---- !u!1 &2074842638
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2074842639}
-  - component: {fileID: 2074842640}
-  m_Layer: 0
-  m_Name: LevelInstaller
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2074842639
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2074842638}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 607.4379, y: 244.00208, z: 1.9477879}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1305320430}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2074842640
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2074842638}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d889bb97fd4a1344088fef2588f5e1a1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _totalTriplets: 68
-  _uniqueTypesCount: 11
-  _bankSize: 7
-  _shape: 3
-  _gridWidth: 12
-  _gridHeight: 14
-  _maxLayers: 28
-  _cardPrefab: {fileID: 2660081592450643855, guid: 550d66419f997654c99f426e44d61f7a, type: 3}
 --- !u!1 &2084212102
 GameObject:
   m_ObjectHideFlags: 0

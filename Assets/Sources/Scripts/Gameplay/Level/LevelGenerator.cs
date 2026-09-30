@@ -1,4 +1,7 @@
+using System;
 using System.Collections.Generic;
+using Cards.Databases;
+using Cards.Services;
 using UnityEngine;
 using Zenject;
 
@@ -6,6 +9,8 @@ namespace Cards.Gameplay
 {
     public class LevelGenerator
     {
+        private const int MaxAttempts = 10;
+
         private int _totalTriplets;
         private int _uniqueTypes;
         private int _bankSize;
@@ -22,76 +27,88 @@ namespace Cards.Gameplay
         private List<CardNode> _generatedCards;
 
         [Inject]
-        public void Construct(int totalTriplets, int uniqueTypes, int bankSize, int gridWidth, int gridHeight, int maxLayers, LevelShape shape)
+        public void Construct(LoadLevelService service)
         {
-            SetGeneratorParams(totalTriplets, uniqueTypes, bankSize, gridWidth, gridHeight, maxLayers, shape);
+            SetGeneratorParams(service.GetLevelConfig());
         }
 
-        public void SetGeneratorParams(int totalTriplets, int uniqueTypes, int bankSize, int gridWidth, int gridHeight, int maxLayers, LevelShape shape)
+        public void SetGeneratorParams(LevelConfig config)
         {
-            _totalTriplets = totalTriplets;
-            _uniqueTypes = uniqueTypes;
-            _bankSize = bankSize;
+            _totalTriplets = config.TotalTriplets;
+            _uniqueTypes = config.UniqueTypesCount;
+            _bankSize = config.BankSize;
 
-            _gridWidth = gridWidth;
-            _gridHeight = gridHeight;
-            _maxLayers = maxLayers;
-            _shape = shape;
+            _gridWidth = config.GridWidth;
+            _gridHeight = config.GridHeight;
+            _maxLayers = config.MaxLayers;
+            _shape = config.Shape;
         }
 
         public List<CardNode> Generate()
         {
-            int totalCards = _totalTriplets * tripletInt;
-            _levelGrid = new CardNode[_gridWidth, _gridHeight, _maxLayers];
-            _generatedCards = new List<CardNode>();
-
-            List<int> cardPool = CreateCardPool();
-            List<int> reverseBank = new List<int>();
-
-            while (cardPool.Count > 0 || reverseBank.Count > 0)
+            for (int attempt = 1; attempt <= MaxAttempts; attempt++)
             {
-                if (reverseBank.Count <= _bankSize - tripletInt && cardPool.Count >= tripletInt)
+                int totalCards = _totalTriplets * tripletInt;
+
+                _levelGrid = new CardNode[_gridWidth, _gridHeight, _maxLayers];
+                _generatedCards = new List<CardNode>();
+
+                List<int> cardPool = CreateCardPool();
+                List<int> reverseBank = new List<int>();
+                bool isGenerationFailed = false;
+
+                while (cardPool.Count > 0 || reverseBank.Count > 0)
                 {
-                    int typeId = cardPool[0];
-
-                    for (int i = 0; i < tripletInt; i++)
-                        reverseBank.Add(typeId);
-
-                    cardPool.RemoveRange(0, tripletInt);
-                }
-
-                if (reverseBank.Count == 0)
-                    break;
-
-                int cardIndexToPlace = Random.Range(0, reverseBank.Count);
-                int currentTypeId = reverseBank[cardIndexToPlace];
-
-                Vector3Int? availablePos = FindAvailablePositionForReverse();
-
-                if (availablePos.HasValue)
-                {
-                    Vector3Int pos = availablePos.Value;
-
-                    CardNode newNode = new CardNode
+                    if (reverseBank.Count <= _bankSize - tripletInt && cardPool.Count >= tripletInt)
                     {
-                        GridPosition = pos,
-                        CardTypeId = currentTypeId,
-                        IsOccupied = true,
-                    };
+                        int typeId = cardPool[0];
 
-                    _levelGrid[pos.x, pos.y, pos.z] = newNode;
-                    _generatedCards.Add(newNode);
+                        for (int i = 0; i < tripletInt; i++)
+                            reverseBank.Add(typeId);
 
-                    reverseBank.RemoveAt(cardIndexToPlace);
+                        cardPool.RemoveRange(0, tripletInt);
+                    }
+
+                    if (reverseBank.Count == 0)
+                        break;
+
+                    int cardIndexToPlace = UnityEngine.Random.Range(0, reverseBank.Count);
+                    int currentTypeId = reverseBank[cardIndexToPlace];
+
+                    Vector3Int? availablePos = FindAvailablePositionForReverse();
+
+                    if (availablePos.HasValue)
+                    {
+                        Vector3Int pos = availablePos.Value;
+
+                        CardNode newNode = new CardNode
+                        {
+                            GridPosition = pos,
+                            CardTypeId = currentTypeId,
+                            IsOccupied = true,
+                        };
+
+                        _levelGrid[pos.x, pos.y, pos.z] = newNode;
+                        _generatedCards.Add(newNode);
+
+                        reverseBank.RemoveAt(cardIndexToPlace);
+                    }
+                    else
+                    {
+                        isGenerationFailed = true;
+                        Debug.LogWarning("Закончилось свободное место на сетке! Увеличьте размеры сетки.");
+                        break;
+                    }
                 }
-                else
-                {
-                    Debug.LogWarning("Закончилось свободное место на сетке! Увеличьте размеры сетки.");
-                    break;
-                }
+
+                if (isGenerationFailed)
+                    continue;
+
+                return _generatedCards;
             }
 
-            return _generatedCards;
+            Debug.LogError("Не удалось созать уровень!");
+            return null;
         }
 
         public List<CardNode> GetInitialNodes()
@@ -121,7 +138,7 @@ namespace Cards.Gameplay
 
             for (int i = 0; i < remainingTriplets; i++)
             {
-                int randomType = Random.Range(0, _uniqueTypes);
+                int randomType = UnityEngine.Random.Range(0, _uniqueTypes);
                 for (int j = 0; j < 3; j++)
                 {
                     pool.Add(randomType);
@@ -132,7 +149,7 @@ namespace Cards.Gameplay
 
             for (int i = 0; i < totalGroups; i++)
             {
-                int randomIndex = Random.Range(i, totalGroups);
+                int randomIndex = UnityEngine.Random.Range(i, totalGroups);
 
                 for (int j = 0; j < 3; j++)
                 {
@@ -199,12 +216,12 @@ namespace Cards.Gameplay
             }
 
             if (strictPositions.Count > 0)
-                return strictPositions[Random.Range(0, strictPositions.Count)];
+                return strictPositions[UnityEngine.Random.Range(0, strictPositions.Count)];
 
             if (fallbackPositions.Count > 0)
             {
                 Debug.LogWarning("Алгоритм зашел в микро-тупик, активировано резервное место.");
-                return fallbackPositions[Random.Range(0, fallbackPositions.Count)];
+                return fallbackPositions[UnityEngine.Random.Range(0, fallbackPositions.Count)];
             }
 
             return null;
@@ -300,56 +317,54 @@ namespace Cards.Gameplay
 
         private bool IsPositionInsideShape(int x, int y)
         {
-            float centerX = _gridWidth / 2f;
-            float centerY = _gridHeight / 2f;
+            float centerX = (_gridWidth - 1) / 2f;
+            float centerY = (_gridHeight - 1) / 2f;
+            float padding = 0.05f;
+            float nx = (x - centerX) / (centerX > 0 ? centerX : 1f);
+            float ny = (y - centerY) / (centerY > 0 ? centerY : 1f);
+
+            nx /= 1f - padding;
+            ny /= 1f - padding;
 
             switch (_shape)
             {
                 case LevelShape.Circle:
-                    float radius = Mathf.Min(centerX, centerY);
-                    float distanceSquare = Mathf.Pow(x - centerX, 2) + Mathf.Pow(y - centerY, 2);
-
-                    return distanceSquare <= Mathf.Pow(radius, 2);
+                    return (nx * nx) + (ny * ny) <= 1f;
 
                 case LevelShape.Diamond:
-                    float maxRadiusX = centerX;
-                    float maxRadiusY = centerY;
-
-                    return (Mathf.Abs(x - centerX) / maxRadiusX) + (Mathf.Abs(y - centerY) / maxRadiusY) <= 1.0f;
+                    return (Mathf.Abs(nx) + Mathf.Abs(ny)) <= 1f;
 
                 case LevelShape.Triangle:
-                    float normalizedY = (float)y / (_gridHeight - 1);
-                    float halfWidthAtY = centerX * normalizedY;
+                    bool insideHorizontal = Mathf.Abs(nx) <= (1f - ((ny + 1f) / 2f));
+                    bool insideVertical = ny >= -1f && ny <= 1f;
 
-                    return x >= (centerX - halfWidthAtY) && x <= (centerX + halfWidthAtY);
+                    return insideHorizontal && insideVertical;
                 case LevelShape.Hourglass:
-                    float normY = ((float)y / (_gridHeight - 1) * 2f) - 1f;
-                    float widthAtY = 0.25f + (0.75f * Mathf.Abs(normY));
-                    float normX = ((float)x / (_gridWidth - 1) * 2f) - 1f;
+                    float widthAtY = 0.25f + (0.75f * Mathf.Abs(ny));
 
-                    return Mathf.Abs(normX) <= widthAtY;
+                    return Mathf.Abs(nx) <= widthAtY && Mathf.Abs(ny) <= 1f;
                 case LevelShape.Donut:
-                    float distSq = Mathf.Pow(x - centerX, 2) + Mathf.Pow(y - centerY, 2);
-                    float outerRadius = Mathf.Min(centerX, centerY);
-                    float innerRadius = outerRadius * 0.4f;
+                    float normDistSq = (nx * nx) + (ny * ny);
+                    float outerRadiusSq = 1f;
+                    float innerRadiusSq = 0.16f;
 
-                    return distSq <= Mathf.Pow(outerRadius, 2) && distSq >= Mathf.Pow(innerRadius, 2);
+                    return normDistSq <= outerRadiusSq && normDistSq >= innerRadiusSq;
                 case LevelShape.Heart:
-                    float heartX = ((float)x / (_gridWidth - 1) * 3f) - 1.5f;
-                    float heartY = ((float)y / (_gridHeight - 1) * 3f) - 1.3f;
-                    float circle = (heartX * heartX) + ((heartY * heartY) - 1f);
-                    float deformingFactor = heartX * heartX * heartY * heartY * heartY;
+                    float hx = nx * 1.5f;
+                    float hy = (ny * 1.5f) - 0.2f;
 
-                    return ((circle * circle * circle) - deformingFactor) <= 0f;
+                    float equationLeft = (hx * hx) + (hy * hy) - 1f;
+                    float equationRight = hx * hx * hy * hy * hy;
+
+                    return (equationLeft * equationLeft * equationLeft) - equationRight <= 0f;
                 case LevelShape.Cross:
-                    float thicknessX = _gridWidth * 0.35f;
-                    float thicknessY = _gridHeight * 0.35f;
+                    float thickness = 0.35f;
+                    bool inVerticalBar = Mathf.Abs(nx) <= thickness;
+                    bool inHorizontalBar = Mathf.Abs(ny) <= thickness;
 
-                    bool inVerticalBar = Mathf.Abs(x - centerX) <= thicknessX / 2f;
-                    bool inHorizontalBar = Mathf.Abs(y - centerY) <= thicknessY / 2f;
-
-                    return inVerticalBar || inHorizontalBar;
+                    return (inVerticalBar || inHorizontalBar) && Mathf.Abs(nx) <= 1f && Mathf.Abs(ny) <= 1f;
                 case LevelShape.Rectangle:
+                    return Mathf.Abs(nx) <= 1f && Mathf.Abs(ny) <= 1f;
                 default:
                     return true;
             }

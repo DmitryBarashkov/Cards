@@ -1,3 +1,4 @@
+using Cards.Services;
 using YG;
 using Zenject;
 
@@ -9,7 +10,9 @@ namespace Cards.Gameplay
         private Field _field;
         private Bank _bank;
         private LevelGenerator _generator;
-        private UIService _service;
+        private UIService _uiService;
+        private LoadLevelService _loadLevelService;
+        private AdService _adService;
 
         private int _levelCardsCount;
         private int _levelNumber;
@@ -21,16 +24,28 @@ namespace Cards.Gameplay
         public bool IsActive => _isActive;
 
         [Inject]
-        public void Construct(LevelState state, LevelGenerator generator, Field field, Bank bank, UIService service, int levelNumber)
+        public void Construct(
+            LevelState state,
+            LevelGenerator generator,
+            LoadLevelService loadLevelService,
+            Field field,
+            Bank bank,
+            UIService uiService,
+            AdService adService,
+            int levelNumber)
         {
             _state = state;
             _field = field;
             _bank = bank;
+
             _generator = generator;
-            _service = service;
+            _uiService = uiService;
+            _loadLevelService = loadLevelService;
+            _adService = adService;
+
             _levelNumber = levelNumber;
 
-            Initialize();
+            SetLevelState();
         }
 
         public void SetLevelState()
@@ -42,28 +57,36 @@ namespace Cards.Gameplay
 
         public void Restart()
         {
-            YG2.InterstitialAdvShow();
-
             var nodes = _generator.GetInitialNodes();
 
+            _adService.ShowInterstitialAdv();
             _bank.Clear();
             _field.Initialize(nodes);
+
             SetLevelState();
         }
 
         public void ShowLoseScreen()
         {
-            _service.ShowEndGameScreen(false);
+            _uiService.ShowEndGameScreen(false);
         }
 
         public void ShowWinScreen()
         {
             _isActive = false;
-            _service.ShowEndGameScreen(true);
+            _uiService.ShowEndGameScreen(true);
         }
 
-        private void Initialize()
+        public void StartNextLevel()
         {
+            _adService.ShowInterstitialAdv();
+
+            YG2.saves.Level++;
+            _levelNumber++;
+
+            _generator.SetGeneratorParams(_loadLevelService.GetLevelConfig());
+            _field.Initialize(_generator.Generate());
+
             SetLevelState();
         }
     }
