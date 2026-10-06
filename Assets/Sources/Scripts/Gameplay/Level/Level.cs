@@ -81,7 +81,6 @@ namespace Cards.Gameplay
         {
             _adService.ShowInterstitialAdv();
 
-            YG2.saves.Level++;
             _levelNumber++;
 
             _generator.SetGeneratorParams(_loadLevelService.GetLevelConfig());
