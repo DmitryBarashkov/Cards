@@ -16,6 +16,6 @@ MonoBehaviour:
   LevelNumber: 1
   TotalTriplets: 3
   UniqueTypesCount: 3
-  GridWidth: 7
-  GridHeight: 7
-  Shape: 0
+  GridWidth: 9
+  GridHeight: 9
+  Shape: 2

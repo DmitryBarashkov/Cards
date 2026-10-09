@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   LevelDifficulty: 0
   LevelNumber: 2
-  TotalTriplets: 8
-  UniqueTypesCount: 3
-  GridWidth: 8
-  GridHeight: 6
+  TotalTriplets: 7
+  UniqueTypesCount: 5
+  GridWidth: 7
+  GridHeight: 7
   Shape: 0

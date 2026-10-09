@@ -14,10 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   LevelDifficulty: 1
   LevelNumber: 9
-  TotalTriplets: 10
-  UniqueTypesCount: 4
-  BankSize: 7
-  GridWidth: 12
-  GridHeight: 12
-  MaxLayers: 4
-  Shape: 0
+  TotalTriplets: 28
+  UniqueTypesCount: 11
+  GridWidth: 16
+  GridHeight: 16
+  Shape: 3
