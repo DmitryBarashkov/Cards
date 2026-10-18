@@ -16,8 +16,6 @@ MonoBehaviour:
   LevelNumber: 14
   TotalTriplets: 10
   UniqueTypesCount: 4
-  BankSize: 7
   GridWidth: 12
   GridHeight: 12
-  MaxLayers: 4
   Shape: 0

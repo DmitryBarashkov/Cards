@@ -1,3 +1,4 @@
+using Cards.Databases;
 using Cards.Services;
 using YG;
 using Zenject;
@@ -83,8 +84,14 @@ namespace Cards.Gameplay
 
             _levelNumber++;
 
-            _generator.SetGeneratorParams(_loadLevelService.GetLevelConfig());
-            _field.Initialize(_generator.Generate());
+            LevelConfig config = _loadLevelService.GetLevelConfig();
+
+            _generator.SetGeneratorParams(config);
+            var levelCardList = config.LevelDifficulty == Difficulty.Hard
+                ? _generator.GenerateHard()
+                : _generator.GenerateEasyMedium();
+
+            _field.Initialize(levelCardList);
 
             SetLevelState();
         }

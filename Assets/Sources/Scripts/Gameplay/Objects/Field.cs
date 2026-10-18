@@ -41,7 +41,7 @@ namespace Cards.Gameplay
             _input = input;
             _uiService = uiService;
 
-            Initialize(_levelGenerator.Generate());
+            Initialize(_levelGenerator.GenerateEasyMedium());
         }
 
         private void Awake()
@@ -185,6 +185,9 @@ namespace Cards.Gameplay
 
         private void GenerateCards(List<CardNode> nodes)
         {
+            nodes.Sort((a, b) => a.GridPosition.z.CompareTo(b.GridPosition.z));
+
+            float layerVisualShiftY = _height * 0.2f;
             float minX = float.MaxValue;
             float maxX = float.MinValue;
             float minY = float.MaxValue;
@@ -193,6 +196,8 @@ namespace Cards.Gameplay
             foreach (var node in nodes)
             {
                 Vector2 uiPos = GetCanvasPosition(node, _width, _height);
+
+                uiPos.y += node.GridPosition.z * layerVisualShiftY;
 
                 if (uiPos.x < minX)
                     minX = uiPos.x;
@@ -217,9 +222,12 @@ namespace Cards.Gameplay
                 {
                     Vector2 uiPos = GetCanvasPosition(node, _width, _height);
 
+                    uiPos.y += node.GridPosition.z * layerVisualShiftY;
+
                     cardRect.localScale = Vector3.one;
                     cardRect.sizeDelta = new Vector2(_width, _height);
-                    cardRect.anchoredPosition = GetCanvasPosition(node, _width, _height) - centerOffset;
+                    cardRect.anchoredPosition = uiPos - centerOffset;
+                    cardRect.anchoredPosition3D = new Vector3(cardRect.anchoredPosition.x, cardRect.anchoredPosition.y, -node.GridPosition.z * 0.1f);
 
                     foreach (RectTransform child in cardRect)
                     {

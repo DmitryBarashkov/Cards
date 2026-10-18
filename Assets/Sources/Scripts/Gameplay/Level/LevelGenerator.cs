@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Cards.Databases;
 using Cards.Services;
 using UnityEngine;
@@ -42,7 +43,7 @@ namespace Cards.Gameplay
             _shape = config.Shape;
         }
 
-        public List<CardNode> Generate()
+        public List<CardNode> GenerateEasyMedium()
         {
             _generatedCards = new List<CardNode>();
 
@@ -163,6 +164,305 @@ namespace Cards.Gameplay
                       $"Вместимость сетки: {allValidPositions.Count}. " +
                       $"Размещено карт: {_generatedCards.Count}");
             return _generatedCards;
+        }
+
+        public List<CardNode> GenerateHard()
+        {
+            _generatedCards = new List<CardNode>();
+            int requiredCardsCount = _totalTriplets * tripletInt;
+            int absoluteMaxLayers = 15;
+
+            LogOptimalCardsCount(absoluteMaxLayers);
+
+            int[,] maxHeightsGrid = new int[_gridWidth, _gridHeight];
+            float seedX = UnityEngine.Random.Range(0f, 100f);
+            float seedY = UnityEngine.Random.Range(0f, 100f);
+            float noiseScale = 0.12f;
+
+            for (int x = 0; x < _gridWidth; x++)
+            {
+                for (int y = 0; y < _gridHeight; y++)
+                {
+                    float noise = Mathf.PerlinNoise((x * noiseScale) + seedX, (y * noiseScale) + seedY);
+                    int minAllowedHeight = 3;
+                    int calculatedHeight = Mathf.RoundToInt(minAllowedHeight + (noise * (absoluteMaxLayers - minAllowedHeight)));
+
+                    maxHeightsGrid[x, y] = calculatedHeight;
+                }
+            }
+
+            List<Vector3Int> allPositions = new List<Vector3Int>();
+
+            for (int z = 0; z < absoluteMaxLayers; z++)
+            {
+                for (int x = 0; x < _gridWidth; x++)
+                {
+                    for (int y = 0; y < _gridHeight; y++)
+                    {
+                        if (IsPositionInsideShape(x, y, 0) == false)
+                            continue;
+
+                        if (z % 2 == 0)
+                        {
+                            if (x % 2 != 0 || y % 2 != 0)
+                                continue;
+                        }
+                        else
+                        {
+                            if (x % 2 == 0 || y % 2 == 0)
+                                continue;
+                        }
+
+                        if (z > maxHeightsGrid[x, y])
+                            continue;
+
+                        allPositions.Add(new Vector3Int(x, y, z));
+                    }
+                }
+            }
+
+            if (allPositions.Count < requiredCardsCount)
+            {
+                allPositions.Clear();
+
+                for (int z = 0; z < absoluteMaxLayers; z++)
+                {
+                    for (int x = 0; x < _gridWidth; x++)
+                    {
+                        for (int y = 0; y < _gridHeight; y++)
+                        {
+                            if (IsPositionInsideShape(x, y, 0) == false)
+                                continue;
+
+                            if (z % 2 == 0)
+                            {
+                                if (x % 2 != 0 || y % 2 != 0)
+                                    continue;
+                            }
+                            else
+                            {
+                                if (x % 2 == 0 || y % 2 == 0)
+                                    continue;
+                            }
+
+                            allPositions.Add(new Vector3Int(x, y, z));
+                        }
+                    }
+                }
+            }
+
+            float centerX = (_gridWidth - 1) / 2f;
+            float centerY = (_gridHeight - 1) / 2f;
+
+            allPositions.Sort((a, b) =>
+            {
+                if (a.z != b.z)
+                    return a.z.CompareTo(b.z);
+
+                float distA = Mathf.Abs(a.x - centerX) + Mathf.Abs(a.y - centerY);
+                float distB = Mathf.Abs(b.x - centerX) + Mathf.Abs(b.y - centerY);
+
+                return distA.CompareTo(distB);
+            });
+
+            HashSet<Vector3Int> targetPositions = GetPositions(allPositions, requiredCardsCount);
+            int finalMaxLayers = 0;
+
+            foreach (var p in targetPositions)
+            {
+                if (p.z > finalMaxLayers)
+                    finalMaxLayers = p.z;
+            }
+
+            _levelGrid = new CardNode[_gridWidth, _gridHeight, finalMaxLayers + 1];
+
+            List<int> availableCardTypes = new List<int>();
+            int tripletsToPlace = _totalTriplets;
+
+            for (int i = 0; i < _uniqueTypes; i++)
+                availableCardTypes.Add(i);
+
+            while (tripletsToPlace > 0 && targetPositions.Count >= 3)
+            {
+                List<Vector3Int> freePositions = new List<Vector3Int>();
+
+                foreach (var pos in targetPositions)
+                {
+                    bool isBlocked = false;
+                    int topZ = pos.z + 1;
+
+                    if (topZ <= finalMaxLayers)
+                    {
+                        Vector3Int[] overlayers = new Vector3Int[]
+                        {
+                            new Vector3Int(pos.x + 1, pos.y + 1, topZ),
+                            new Vector3Int(pos.x - 1, pos.y + 1, topZ),
+                            new Vector3Int(pos.x + 1, pos.y - 1, topZ),
+                            new Vector3Int(pos.x - 1, pos.y - 1, topZ),
+                        };
+
+                        foreach (var over in overlayers)
+                        {
+                            if (over.x >= 0 && over.x < _gridWidth && over.y >= 0 && over.y < _gridHeight)
+                            {
+                                if (targetPositions.Contains(over) && _levelGrid[over.x, over.y, over.z] == null)
+                                {
+                                    isBlocked = true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                    if (isBlocked == false)
+                        freePositions.Add(pos);
+                }
+
+                if (freePositions.Count < 3)
+                    freePositions = new List<Vector3Int>(targetPositions);
+
+                freePositions.Sort((a, b) => a.z.CompareTo(b.z));
+
+                int poolSize = Mathf.Min(12, freePositions.Count);
+                List<Vector3Int> lowerPool = freePositions.GetRange(0, poolSize);
+                List<Vector3Int> chosenPositions = new List<Vector3Int>();
+
+                for (int k = 0; k < 3; k++)
+                {
+                    if (lowerPool.Count == 0)
+                        break;
+
+                    int idx = UnityEngine.Random.Range(0, lowerPool.Count);
+
+                    chosenPositions.Add(lowerPool[idx]);
+                    targetPositions.Remove(lowerPool[idx]);
+                    lowerPool.RemoveAt(idx);
+                }
+
+                if (chosenPositions.Count < 3)
+                    break;
+
+                int cardTypeId = availableCardTypes[UnityEngine.Random.Range(0, availableCardTypes.Count)];
+
+                foreach (var pos in chosenPositions)
+                {
+                    CardNode newNode = new CardNode
+                    {
+                        GridPosition = pos,
+                        CardTypeId = cardTypeId,
+                        IsOccupied = true,
+                    };
+
+                    _levelGrid[pos.x, pos.y, pos.z] = newNode;
+                    _generatedCards.Add(newNode);
+                }
+
+                tripletsToPlace--;
+            }
+
+            Debug.Log($"[LevelGenerator Hard] Готово! Слоев: {finalMaxLayers + 1}. Карт: {_generatedCards.Count}. Проходимость: 100%.");
+            return _generatedCards;
+        }
+
+        private void LogOptimalCardsCount(int absoluteMaxLayers)
+        {
+            int totalPositionsAccumulated = 0;
+
+            Debug.Log($"=== [АНАЛИЗ ВМЕСТИМОСТИ ФОРМЫ ПО СЛОЯМ] ===");
+            Debug.Log($"Размер сетки: {_gridWidth} x {_gridHeight}");
+
+            for (int z = 0; z < absoluteMaxLayers; z++)
+            {
+                int cardsOnThisLayer = 0;
+
+                for (int x = 0; x < _gridWidth; x++)
+                {
+                    for (int y = 0; y < _gridHeight; y++)
+                    {
+                        if (IsPositionInsideShape(x, y, 0) == false)
+                            continue;
+
+                        if (z % 2 == 0)
+                        {
+                            if (x % 2 != 0 || y % 2 != 0)
+                                continue;
+                        }
+                        else
+                        {
+                            if (x % 2 == 0 || y % 2 == 0)
+                                continue;
+                        }
+
+                        cardsOnThisLayer++;
+                    }
+                }
+
+                if (cardsOnThisLayer == 0)
+                {
+                    Debug.Log($"[Слой {z}] Пусто. Форма физически закончилась на высоте {z} слоев.");
+                    break;
+                }
+
+                totalPositionsAccumulated += cardsOnThisLayer;
+
+                int optimalTriplets = totalPositionsAccumulated / 3;
+                int optimalCardsCount = optimalTriplets * 3;
+                int leftoverEmptySpaces = totalPositionsAccumulated % 3;
+
+                Debug.Log($" Слой {z:00} | " +
+                          $"Мест на слое: {cardsOnThisLayer:000} | " +
+                          $"Всего мест (0-{z}): {totalPositionsAccumulated:000} || " +
+                          $"ОПТИМАЛЬНО КАРТ: {optimalCardsCount:000} ({optimalTriplets} трипл.) | " +
+                          $"Остаток дыр: {leftoverEmptySpaces}");
+            }
+
+            Debug.Log($"===========================================");
+        }
+
+        private HashSet<Vector3Int> GetPositions(List<Vector3Int> allPositions, int requiredCardsCount)
+        {
+            List<Vector3Int> preSelectedPositions = allPositions.GetRange(0, requiredCardsCount);
+            int highestZ = 0;
+
+            foreach (var pos in preSelectedPositions)
+            {
+                if (pos.z > highestZ)
+                    highestZ = pos.z;
+            }
+
+            if (highestZ > 0)
+            {
+                List<Vector3Int> topLayerCards = preSelectedPositions.Where(pos => pos.z == highestZ).ToList();
+                List<Vector3Int> tilesToRemove = new List<Vector3Int>();
+
+                foreach (var tile in topLayerCards)
+                {
+                    int normX = tile.x / 2;
+                    int normY = tile.y / 2;
+
+                    if ((normX + normY) % 2 != 0)
+                        tilesToRemove.Add(tile);
+                }
+
+                foreach (var tile in tilesToRemove)
+                    preSelectedPositions.Remove(tile);
+
+                int shortage = requiredCardsCount - preSelectedPositions.Count;
+
+                if (shortage > 0)
+                {
+                    var availableLowerPositions = allPositions
+                        .Where(pos => pos.z < highestZ && !preSelectedPositions.Contains(pos))
+                        .ToList();
+
+                    if (availableLowerPositions.Count >= shortage)
+                        preSelectedPositions.AddRange(availableLowerPositions.GetRange(0, shortage));
+                    else
+                        Debug.LogWarning("[LevelGenerator] Не удалось полностью компенсировать шахматный слой снизу.");
+                }
+            }
+
+            return new HashSet<Vector3Int>(preSelectedPositions);
         }
 
         private bool IsPositionInsideShape(int x, int y, int z)

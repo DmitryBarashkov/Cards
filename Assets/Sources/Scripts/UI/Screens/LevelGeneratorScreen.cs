@@ -13,6 +13,7 @@ namespace Cards.UI
         [SerializeField] private TMP_InputField _width;
         [SerializeField] private TMP_InputField _height;
         [SerializeField] private TMP_Dropdown _shape;
+        [SerializeField] private TMP_Dropdown _difficulty;
 
         [Inject] private LevelGenerator _generator;
         [Inject] private Field _field;
@@ -28,7 +29,13 @@ namespace Cards.UI
             config.Shape = (LevelShape)_shape.value;
 
             _generator.SetGeneratorParams(config);
-            _field.Initialize(_generator.Generate());
+
+            Difficulty difficulty = (Difficulty)_difficulty.value;
+            var cardListLevel = difficulty == Difficulty.Hard
+                ? _generator.GenerateHard()
+                : _generator.GenerateEasyMedium();
+
+            _field.Initialize(cardListLevel);
         }
     }
 }
