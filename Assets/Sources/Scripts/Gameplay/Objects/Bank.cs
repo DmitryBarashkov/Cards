@@ -5,16 +5,18 @@ using System.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
 using Zenject;
+using static Cards.UI.UIScreen;
 
 namespace Cards.Gameplay
 {
     public class Bank : MonoBehaviour
     {
-        [SerializeField] private List<Transform> _cells;
+        [SerializeField] private List<CardCell> _cells;
 
         [Inject] private LevelState _state;
         [Inject] private Level _level;
         [Inject] private Field _field;
+        [Inject] private CardFactory _factory;
 
         private List<Card> _cards = new ();
 
@@ -31,6 +33,7 @@ namespace Cards.Gameplay
         private int _bankSize = 7;
 
         private Card _lastAddedCard;
+        private RectTransform _rectTransform;
 
         public int CardsCount => _cards.Count;
 
@@ -39,6 +42,12 @@ namespace Cards.Gameplay
         public bool CanUseCleaning => _cards.Count >= _minCleanCount;
 
         public bool CanUseCancel => _lastAddedCard != null;
+
+        private void Awake()
+        {
+            _rectTransform = GetComponent<RectTransform>();
+            _rectTransform.sizeDelta = new Vector2(_rectTransform.sizeDelta.x, _factory.GetHeight() * 1.5f);
+        }
 
         public void AddNewCard(Card card)
         {
@@ -98,8 +107,8 @@ namespace Cards.Gameplay
 
             foreach (var cell in _cells)
             {
-                if (cell.childCount == 0)
-                    return cell;
+                if (cell.transform.childCount == 0)
+                    return cell.transform;
             }
 
             throw new ArgumentException("Не удалось получить пустую ячейку!");
@@ -143,7 +152,7 @@ namespace Cards.Gameplay
         {
             for (int i = 0; i < _cards.Count; i++)
             {
-                _cards[i].transform.SetParent(_cells[i]);
+                _cards[i].transform.SetParent(_cells[i].transform);
                 _cards[i].transform.localPosition = Vector3.zero;
             }
 

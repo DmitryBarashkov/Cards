@@ -10,12 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8342933753852ca4daae224630f57799, type: 3}
-  m_Name: Hard_5
+  m_Name: Hard_Diamond
   m_EditorClassIdentifier: 
   LevelDifficulty: 2
-  LevelNumber: 15
-  TotalTriplets: 10
-  UniqueTypesCount: 4
-  GridWidth: 12
-  GridHeight: 12
-  Shape: 0
+  TotalTriplets: 50
+  UniqueTypesCount: 11
+  GridWidth: 13
+  GridHeight: 13
+  Shape: 2

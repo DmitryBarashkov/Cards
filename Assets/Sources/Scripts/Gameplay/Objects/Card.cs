@@ -10,7 +10,10 @@ namespace Cards.Gameplay
 {
     public class Card : UIButton
     {
+        private readonly Color _darkenedColor = new Color(0.5f, 0.5f, 0.5f, 1f);
+
         [SerializeField] private Image _image;
+        [SerializeField] private Image _background;
 
         private Field _field;
         private Bank _bank;
@@ -20,6 +23,7 @@ namespace Cards.Gameplay
         private float _duration = 0.2f;
         private bool _inBank = false;
         private bool _isCleared = false;
+        private Color _normalColor;
 
         private Vector3 _initialPosition;
 
@@ -35,6 +39,7 @@ namespace Cards.Gameplay
             _field = field;
             _bank = bank;
             _gameplayContainer = gameplayContainer.transform;
+            _normalColor = _background.color;
         }
 
         public override void HandleClick()
@@ -65,12 +70,19 @@ namespace Cards.Gameplay
                 throw new ArgumentException("У карточки нет исходной позиции");
 
             _rectTransform.SetParent(_gameplayContainer.transform);
-            _rectTransform.DOMove(_initialPosition, _duration).SetEase(Ease.OutQuad);
-            _rectTransform.SetParent(_field.transform);
-            _rectTransform.SetAsLastSibling();
+            _rectTransform.DOMove(_initialPosition, _duration).SetEase(Ease.OutQuad).OnComplete(() =>
+            {
+                _rectTransform.SetParent(_field.transform);
+                _rectTransform.SetAsLastSibling();
 
-            _field.AddCard(this);
-            _inBank = false;
+                _field.AddCard(this);
+                _inBank = false;
+            });
+        }
+
+        public void ToggleHighlight(bool isNeedHighlight)
+        {
+            _background.color = isNeedHighlight ? _normalColor : _darkenedColor;
         }
 
         private void ExecuteCardAction()

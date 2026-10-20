@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Cards.Databases;
@@ -9,6 +10,10 @@ namespace Cards.Services
 {
     public class LoadLevelService
     {
+        private const int LastEasyLevelNumber = 5;
+        private const int LastMediumLevelNumber = 10;
+        private const int LastHardLevelNumber = 16;
+
         private List<LevelConfig> _configs;
 
         private LevelConfig _currentConfig;
@@ -26,13 +31,13 @@ namespace Cards.Services
 
             switch (levelNumber)
             {
-                case <= 5:
+                case <= LastEasyLevelNumber:
                     selectedConfig = GetConfig(Difficulty.Easy, levelNumber);
                     break;
-                case <= 10:
+                case <= LastMediumLevelNumber:
                     selectedConfig = GetConfig(Difficulty.Medium, levelNumber);
                     break;
-                case <= 17:
+                case <= LastHardLevelNumber:
                     selectedConfig = GetConfig(Difficulty.Hard, levelNumber);
                     break;
                 default:
@@ -43,8 +48,7 @@ namespace Cards.Services
             if (selectedConfig != null)
             {
                 _currentConfig = selectedConfig;
-                Debug.Log($"[LevelProvider] Загружен уровень игры {levelNumber}. " +
-                          $"Пресет: {_currentConfig.LevelDifficulty} (№{_currentConfig.LevelNumber})");
+                Debug.Log($"[LevelProvider] Загружен уровень игры {levelNumber}.");
             }
             else
             {
@@ -74,8 +78,12 @@ namespace Cards.Services
 
         private LevelConfig GetConfig(Difficulty difficulty, int internalNumber)
         {
-            return _configs.FirstOrDefault(config =>
-                config.LevelDifficulty == difficulty && config.LevelNumber == internalNumber);
+            LevelConfig config = _configs[internalNumber - 1];
+
+            if (difficulty == config.LevelDifficulty)
+                return config;
+
+            throw new ArgumentException("Неправильный конфиг уровня или он не найден");
         }
     }
 }

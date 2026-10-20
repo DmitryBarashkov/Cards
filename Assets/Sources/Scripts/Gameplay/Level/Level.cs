@@ -47,6 +47,7 @@ namespace Cards.Gameplay
             _levelNumber = levelNumber;
 
             SetLevelState();
+            StartLevel();
         }
 
         public void SetLevelState()
@@ -84,6 +85,11 @@ namespace Cards.Gameplay
 
             _levelNumber++;
 
+            StartLevel();
+        }
+
+        private void StartLevel()
+        {
             LevelConfig config = _loadLevelService.GetLevelConfig();
 
             _generator.SetGeneratorParams(config);

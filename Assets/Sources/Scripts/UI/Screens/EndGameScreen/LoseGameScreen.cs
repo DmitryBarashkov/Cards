@@ -1,7 +1,4 @@
-using Cards.Gameplay;
-using TMPro;
 using UnityEngine;
-using Zenject;
 
 namespace Cards.UI
 {
@@ -9,9 +6,6 @@ namespace Cards.UI
     {
         [SerializeField] private AddClearButton _clearbutton;
         [SerializeField] private AddCancelButton _cancelButton;
-        [SerializeField] private TextMeshProUGUI _text;
-
-        [Inject] private Bank _bank;
 
         private void OnEnable()
         {

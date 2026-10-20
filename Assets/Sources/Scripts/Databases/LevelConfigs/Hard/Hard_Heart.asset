@@ -10,12 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8342933753852ca4daae224630f57799, type: 3}
-  m_Name: Hard_6
+  m_Name: Hard_Heart
   m_EditorClassIdentifier: 
   LevelDifficulty: 2
-  LevelNumber: 16
-  TotalTriplets: 10
-  UniqueTypesCount: 4
-  GridWidth: 12
-  GridHeight: 12
-  Shape: 0
+  TotalTriplets: 50
+  UniqueTypesCount: 11
+  GridWidth: 20
+  GridHeight: 20
+  Shape: 6

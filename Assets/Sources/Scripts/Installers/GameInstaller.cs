@@ -3,7 +3,6 @@ using Cards.Services;
 using Cards.UI;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 using YG;
 using Zenject;
 
@@ -30,7 +29,6 @@ namespace Cards.Installers
         [SerializeField] private GameplayContainer _gameplayContainer;
 
         [Header("Сервисы")]
-        [SerializeField] private CanvasScaler[] _canvasScales;
         [SerializeField] private GameObject _advCountContainer;
         [SerializeField] private TextMeshProUGUI _advCountText;
 
@@ -91,8 +89,6 @@ namespace Cards.Installers
             .WithArguments(_advCountText)
             .NonLazy();
 
-            Container.BindInterfacesAndSelfTo<SizeAdapter>().AsSingle().WithArguments(_canvasScales).NonLazy();
-
             Container.BindFactory<Transform, GameObject, UIScreen, UIScreen.Factory>()
                 .FromMethod((container, parent, prefab) =>
                 {
@@ -117,18 +113,26 @@ namespace Cards.Installers
 
         private void BindGameObjects()
         {
-            Container.Bind<GameplayContainer>().FromComponentInHierarchy().AsSingle();
+            Container.Bind<GameplayContainer>().FromInstance(_gameplayContainer).AsSingle();
 
             Container.Bind<Bank>()
                 .FromComponentInNewPrefab(_bankPrefab)
                 .UnderTransform(_gameplayContainer.transform)
                 .AsSingle()
+                .OnInstantiated<Bank>((ctx, bank) =>
+                {
+                    bank.GetComponent<RectTransform>().SetSiblingIndex(0);
+                })
                 .NonLazy();
 
             Container.Bind<Field>()
                 .FromComponentInNewPrefab(_fieldPrefab)
                 .UnderTransform(_gameplayContainer.transform)
                 .AsSingle()
+                .OnInstantiated<Field>((ctx, field) =>
+                {
+                    field.GetComponent<RectTransform>().SetSiblingIndex(1);
+                })
                 .NonLazy();
         }
 

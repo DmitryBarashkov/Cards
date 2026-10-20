@@ -8,12 +8,12 @@ namespace YG
         public int Rating = 0;
 
         // Items
-        public int Shuffles = 1;
-        public int Cleanings = 1;
-        public int Cancels = 3;
+        public int Shuffles = 99;
+        public int Cleanings = 99;
+        public int Cancels = 99;
 
         // Shop
-        public bool IsAdsDisabled = false;
+        public bool IsAdsDisabled = true;
         public bool IsBeginnerSetBought = false;
 
         // Options

@@ -12,17 +12,13 @@ namespace Cards.Gameplay
         private readonly List<Card> _activeCards = new List<Card>();
 
         [SerializeField] private ClearContainer _clearContainer;
-        [SerializeField] private Transform _cardsContainer;
+        [SerializeField] private RectTransform _background;
+        [SerializeField] private RectTransform _cardsContainer;
 
-        private RectTransform _rectTransform;
         private CardsDatabase _database;
         private CardFactory _factory;
-        private LevelGenerator _levelGenerator;
         private InputService _input;
         private UIService _uiService;
-
-        private int _width = 64;
-        private int _height = 64;
 
         private int _centerCoefficient = 2;
         private float _sizeMultiplier = 0.85f;
@@ -33,20 +29,12 @@ namespace Cards.Gameplay
         public int CardsCount => _activeCards.Count;
 
         [Inject]
-        public void Construct(CardsDatabase database, LevelGenerator levelGenerator, CardFactory factory, InputService input, UIService uiService)
+        public void Construct(CardsDatabase database, CardFactory factory, InputService input, UIService uiService)
         {
             _database = database;
-            _levelGenerator = levelGenerator;
             _factory = factory;
             _input = input;
             _uiService = uiService;
-
-            Initialize(_levelGenerator.GenerateEasyMedium());
-        }
-
-        private void Awake()
-        {
-            _rectTransform = GetComponent<RectTransform>();
         }
 
         private void OnEnable()
@@ -64,14 +52,10 @@ namespace Cards.Gameplay
             _input.GetInput();
         }
 
-        public void ApplySize(Vector2 fieldSize)
-        {
-            _rectTransform.sizeDelta = fieldSize;
-        }
-
         public void AddCard(Card card)
         {
             _activeCards.Add(card);
+            UpdateCardsHighlight();
         }
 
         public void DeleteCard(Card card)
@@ -80,6 +64,8 @@ namespace Cards.Gameplay
 
             if (card.IsCleared)
                 _clearContainer.DeleteCard(card);
+
+            UpdateCardsHighlight();
         }
 
         public bool IsCardOverlapped(Card targetCard)
@@ -108,13 +94,21 @@ namespace Cards.Gameplay
                     Rect otherScreenRect = GetScreenRect(otherCard.RectTransform);
 
                     if (targetScreenRect.Overlaps(otherScreenRect))
-                    {
                         return true;
-                    }
                 }
             }
 
             return false;
+        }
+
+        public void UpdateCardsHighlight()
+        {
+            foreach (var card in _activeCards)
+            {
+                bool isOverlapped = IsCardOverlapped(card);
+
+                card.ToggleHighlight(isOverlapped == false);
+            }
         }
 
         public void Initialize(List<CardNode> nodes)
@@ -157,14 +151,20 @@ namespace Cards.Gameplay
                 siblingIndices[randomIndex] = tempIndex;
             }
 
+            Sequence shuffleSequence = DOTween.Sequence();
+
             for (int i = 0; i < childCount; i++)
             {
                 Transform card = cards[i];
 
                 card.SetSiblingIndex(siblingIndices[i]);
-                card.DOLocalMove(positions[i], _shuffleDuration)
-                    .SetEase(_shuffleEaseType);
+                shuffleSequence.Join(card.DOLocalMove(positions[i], _shuffleDuration).SetEase(_shuffleEaseType));
             }
+
+            shuffleSequence.OnComplete(() =>
+            {
+                UpdateCardsHighlight();
+            });
         }
 
         public void MoveToClearContainer(Card card)
@@ -187,7 +187,9 @@ namespace Cards.Gameplay
         {
             nodes.Sort((a, b) => a.GridPosition.z.CompareTo(b.GridPosition.z));
 
-            float layerVisualShiftY = _height * 0.2f;
+            float width = _factory.GetWidth();
+            float height = _factory.GetHeight();
+            float layerVisualShiftY = height * 0.2f;
             float minX = float.MaxValue;
             float maxX = float.MinValue;
             float minY = float.MaxValue;
@@ -195,18 +197,18 @@ namespace Cards.Gameplay
 
             foreach (var node in nodes)
             {
-                Vector2 uiPos = GetCanvasPosition(node, _width, _height);
+                Vector2 uiPos = GetCanvasPosition(node, width, height);
 
                 uiPos.y += node.GridPosition.z * layerVisualShiftY;
 
                 if (uiPos.x < minX)
                     minX = uiPos.x;
-                if (uiPos.x + _width > maxX)
-                    maxX = uiPos.x + _width;
+                if (uiPos.x + width > maxX)
+                    maxX = uiPos.x + width;
                 if (uiPos.y < minY)
                     minY = uiPos.y;
-                if (uiPos.y + _height > maxY)
-                    maxY = uiPos.y + _height;
+                if (uiPos.y + height > maxY)
+                    maxY = uiPos.y + height;
             }
 
             float centerX = (minX + maxX) / _centerCoefficient;
@@ -220,12 +222,12 @@ namespace Cards.Gameplay
 
                 if (cardRect != null)
                 {
-                    Vector2 uiPos = GetCanvasPosition(node, _width, _height);
+                    Vector2 uiPos = GetCanvasPosition(node, width, height);
 
                     uiPos.y += node.GridPosition.z * layerVisualShiftY;
 
                     cardRect.localScale = Vector3.one;
-                    cardRect.sizeDelta = new Vector2(_width, _height);
+                    cardRect.sizeDelta = new Vector2(width, height);
                     cardRect.anchoredPosition = uiPos - centerOffset;
                     cardRect.anchoredPosition3D = new Vector3(cardRect.anchoredPosition.x, cardRect.anchoredPosition.y, -node.GridPosition.z * 0.1f);
 
@@ -242,6 +244,9 @@ namespace Cards.Gameplay
                     }
                 }
             }
+
+            CenterCards();
+            UpdateCardsHighlight();
         }
 
         private Rect GetScreenRect(RectTransform rectTransform)
@@ -274,6 +279,46 @@ namespace Cards.Gameplay
             float posY = node.GridPosition.y * (height / _centerCoefficient);
 
             return new Vector2(posX, posY);
+        }
+
+        private void CenterCards()
+        {
+            if (_activeCards.Count > 0)
+            {
+                float minTileX = float.MaxValue;
+                float maxTileX = float.MinValue;
+                float minTileY = float.MaxValue;
+                float maxTileY = float.MinValue;
+
+                foreach (Card card in _activeCards)
+                {
+                    RectTransform rTransform = card.GetComponent<RectTransform>();
+                    if (rTransform == null)
+                        continue;
+
+                    Vector2 pos = rTransform.anchoredPosition;
+
+                    if (pos.x < minTileX)
+                        minTileX = pos.x;
+
+                    if (pos.x > maxTileX)
+                        maxTileX = pos.x;
+
+                    if (pos.y < minTileY)
+                        minTileY = pos.y;
+
+                    if (pos.y > maxTileY)
+                        maxTileY = pos.y;
+                }
+
+                float realCenterX = (minTileX + maxTileX) / 2f;
+                float realCenterY = (minTileY + maxTileY) / 2f;
+                Vector2 finalVisualCenter = new Vector2(realCenterX, realCenterY);
+                RectTransform containerRect = _cardsContainer.GetComponent<RectTransform>();
+
+                if (containerRect != null)
+                    containerRect.anchoredPosition = -finalVisualCenter;
+            }
         }
 
         private void ShowGenerateLevelScreen()

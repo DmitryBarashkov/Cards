@@ -2,18 +2,28 @@ using System.Collections.Generic;
 using Cards.Gameplay;
 using DG.Tweening;
 using UnityEngine;
+using Zenject;
 
 public class ClearContainer : MonoBehaviour
 {
-    [SerializeField] private List<ClearCell> _cells;
+    [Inject] private CardFactory _factory;
 
+    [SerializeField] private List<CardCell> _cells;
+
+    private RectTransform _rectTransform;
     private List<Card> _cards = new ();
 
     private float _clearDuration = 0.4f;
 
+    private void Awake()
+    {
+        _rectTransform = GetComponent<RectTransform>();
+        _rectTransform.sizeDelta = new Vector2(_rectTransform.sizeDelta.x, _factory.GetHeight() * 1.5f);
+    }
+
     public void AddNewCard(Card card)
     {
-        ClearCell clearCell = GetClearCell();
+        CardCell clearCell = GetClearCell();
         Transform cellTransform = clearCell.transform;
 
         clearCell.SetEmpty(false);
@@ -31,7 +41,7 @@ public class ClearContainer : MonoBehaviour
 
     public void DeleteCard(Card card)
     {
-        ClearCell cell = card.transform.GetComponentInParent<ClearCell>();
+        CardCell cell = card.transform.GetComponentInParent<CardCell>();
 
         if (cell.transform.childCount == 1)
             cell.SetEmpty(true);
@@ -41,20 +51,20 @@ public class ClearContainer : MonoBehaviour
 
     public void Clear()
     {
-        foreach (ClearCell cell in _cells)
+        foreach (CardCell cell in _cells)
             cell.SetEmpty(true);
 
         _cards.Clear();
     }
 
-    private ClearCell GetClearCell()
+    private CardCell GetClearCell()
     {
         int minCellItemsCount = 0;
         int minCellCountIndex = 0;
 
         for (int i = 0; i < _cells.Count; i++)
         {
-            ClearCell cell = _cells[i];
+            CardCell cell = _cells[i];
 
             if (cell.IsEmpty)
                 return cell;

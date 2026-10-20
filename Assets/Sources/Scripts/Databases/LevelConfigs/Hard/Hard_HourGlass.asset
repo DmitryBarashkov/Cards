@@ -10,12 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8342933753852ca4daae224630f57799, type: 3}
-  m_Name: Hard_2
+  m_Name: Hard_HourGlass
   m_EditorClassIdentifier: 
   LevelDifficulty: 2
-  LevelNumber: 12
-  TotalTriplets: 10
+  TotalTriplets: 70
   UniqueTypesCount: 4
-  GridWidth: 12
-  GridHeight: 12
-  Shape: 0
+  GridWidth: 13
+  GridHeight: 10
+  Shape: 4

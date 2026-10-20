@@ -8,7 +8,6 @@ namespace Cards.Databases
     {
         [Header("Общие настройки")]
         public Difficulty LevelDifficulty;
-        public int LevelNumber;
 
         [Header("Параметры баланса карт")]
         public int TotalTriplets = 10;

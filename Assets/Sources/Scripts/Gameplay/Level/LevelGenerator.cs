@@ -278,6 +278,7 @@ namespace Cards.Gameplay
 
             List<int> availableCardTypes = new List<int>();
             int tripletsToPlace = _totalTriplets;
+            float trapChance = 0.4f;
 
             for (int i = 0; i < _uniqueTypes; i++)
                 availableCardTypes.Add(i);
@@ -323,20 +324,51 @@ namespace Cards.Gameplay
 
                 freePositions.Sort((a, b) => a.z.CompareTo(b.z));
 
-                int poolSize = Mathf.Min(12, freePositions.Count);
-                List<Vector3Int> lowerPool = freePositions.GetRange(0, poolSize);
                 List<Vector3Int> chosenPositions = new List<Vector3Int>();
+                bool trapCreated = false;
 
-                for (int k = 0; k < 3; k++)
+                if (UnityEngine.Random.value < trapChance && freePositions.Count > 0)
                 {
-                    if (lowerPool.Count == 0)
-                        break;
+                    foreach (var topPos in freePositions)
+                    {
+                        Vector3Int midPos = new Vector3Int(topPos.x, topPos.y, topPos.z - 2);
+                        Vector3Int botPos = new Vector3Int(topPos.x, topPos.y, topPos.z - 4);
 
-                    int idx = UnityEngine.Random.Range(0, lowerPool.Count);
+                        if (targetPositions.Contains(midPos) && targetPositions.Contains(botPos))
+                        {
+                            if (_levelGrid[midPos.x, midPos.y, midPos.z] == null && _levelGrid[botPos.x, botPos.y, botPos.z] == null)
+                            {
+                                chosenPositions.Add(topPos);
+                                chosenPositions.Add(midPos);
+                                chosenPositions.Add(botPos);
 
-                    chosenPositions.Add(lowerPool[idx]);
-                    targetPositions.Remove(lowerPool[idx]);
-                    lowerPool.RemoveAt(idx);
+                                targetPositions.Remove(topPos);
+                                targetPositions.Remove(midPos);
+                                targetPositions.Remove(botPos);
+
+                                trapCreated = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if (trapCreated == false)
+                {
+                    int poolSize = Mathf.Min(4, freePositions.Count);
+                    List<Vector3Int> lowerPool = freePositions.GetRange(0, poolSize);
+
+                    for (int k = 0; k < 3; k++)
+                    {
+                        if (lowerPool.Count == 0)
+                            break;
+
+                        int idx = UnityEngine.Random.Range(0, lowerPool.Count);
+
+                        chosenPositions.Add(lowerPool[idx]);
+                        targetPositions.Remove(lowerPool[idx]);
+                        lowerPool.RemoveAt(idx);
+                    }
                 }
 
                 if (chosenPositions.Count < 3)
@@ -421,48 +453,100 @@ namespace Cards.Gameplay
 
         private HashSet<Vector3Int> GetPositions(List<Vector3Int> allPositions, int requiredCardsCount)
         {
-            List<Vector3Int> preSelectedPositions = allPositions.GetRange(0, requiredCardsCount);
-            int highestZ = 0;
+            HashSet<Vector3Int> targetPositions = new HashSet<Vector3Int>();
 
-            foreach (var pos in preSelectedPositions)
+            Vector2Int[] diagonalNeighbors = new Vector2Int[]
             {
-                if (pos.z > highestZ)
-                    highestZ = pos.z;
-            }
+                new Vector2Int(1, 1),
+                new Vector2Int(-1, 1),
+                new Vector2Int(1, -1),
+                new Vector2Int(-1, -1),
+            };
 
-            if (highestZ > 0)
+            foreach (var pos in allPositions)
             {
-                List<Vector3Int> topLayerCards = preSelectedPositions.Where(pos => pos.z == highestZ).ToList();
-                List<Vector3Int> tilesToRemove = new List<Vector3Int>();
+                if (targetPositions.Count >= requiredCardsCount)
+                    break;
 
-                foreach (var tile in topLayerCards)
+                if (pos.z <= 3)
                 {
-                    int normX = tile.x / 2;
-                    int normY = tile.y / 2;
-
-                    if ((normX + normY) % 2 != 0)
-                        tilesToRemove.Add(tile);
+                    targetPositions.Add(pos);
                 }
-
-                foreach (var tile in tilesToRemove)
-                    preSelectedPositions.Remove(tile);
-
-                int shortage = requiredCardsCount - preSelectedPositions.Count;
-
-                if (shortage > 0)
+                else
                 {
-                    var availableLowerPositions = allPositions
-                        .Where(pos => pos.z < highestZ && !preSelectedPositions.Contains(pos))
-                        .ToList();
+                    bool hasIslandNeighbor = false;
 
-                    if (availableLowerPositions.Count >= shortage)
-                        preSelectedPositions.AddRange(availableLowerPositions.GetRange(0, shortage));
-                    else
-                        Debug.LogWarning("[LevelGenerator] Не удалось полностью компенсировать шахматный слой снизу.");
+                    foreach (var dir in diagonalNeighbors)
+                    {
+                        Vector3Int neighborPos = new Vector3Int(pos.x + (dir.x * 2), pos.y + (dir.y * 2), pos.z);
+
+                        if (targetPositions.Contains(neighborPos))
+                        {
+                            hasIslandNeighbor = true;
+                            break;
+                        }
+                    }
+
+                    if (hasIslandNeighbor || targetPositions.Count(p => p.z == pos.z) == 0)
+                        targetPositions.Add(pos);
                 }
             }
 
-            return new HashSet<Vector3Int>(preSelectedPositions);
+            int safetyLoop = 0;
+
+            while (targetPositions.Count < requiredCardsCount && safetyLoop < 50)
+            {
+                bool addedAny = false;
+
+                safetyLoop++;
+
+                foreach (var pos in allPositions)
+                {
+                    if (targetPositions.Contains(pos))
+                        continue;
+
+                    bool hasNeighbor = false;
+
+                    foreach (var dir in diagonalNeighbors)
+                    {
+                        Vector3Int n = new Vector3Int(pos.x + (dir.x * 2), pos.y + (dir.y * 2), pos.z);
+                        if (targetPositions.Contains(n))
+                        {
+                            hasNeighbor = true;
+                            break;
+                        }
+                    }
+
+                    if (hasNeighbor)
+                    {
+                        targetPositions.Add(pos);
+                        addedAny = true;
+                    }
+
+                    if (targetPositions.Count >= requiredCardsCount)
+                        break;
+                }
+
+                if (addedAny == false)
+                    break;
+            }
+
+            if (targetPositions.Count < requiredCardsCount)
+            {
+                foreach (var pos in allPositions)
+                {
+                    if (targetPositions.Contains(pos))
+                        continue;
+
+                    if (pos.z <= 4)
+                        targetPositions.Add(pos);
+
+                    if (targetPositions.Count >= requiredCardsCount)
+                        break;
+                }
+            }
+
+            return targetPositions;
         }
 
         private bool IsPositionInsideShape(int x, int y, int z)
