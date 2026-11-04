@@ -1,0 +1,20 @@
+{
+  "intExample": 5,
+  "strExample": "Hello!",
+  "boolExample": [
+    false,
+    false,
+    false,
+    false
+  ],
+  "idSave": 2,
+  "Level": 3,
+  "Coins": 30,
+  "Rating": 30,
+  "Shuffles": 99,
+  "Cleanings": 99,
+  "Cancels": 99,
+  "IsAdsDisabled": true,
+  "IsBeginnerSetBought": false,
+  "IsSoundOn": true
+}
