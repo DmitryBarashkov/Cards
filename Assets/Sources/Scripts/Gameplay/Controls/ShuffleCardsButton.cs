@@ -10,6 +10,8 @@ public class ShuffleCardsButton : UIButton
 
     public override void HandleClick()
     {
+        _audioService.PlaySound(SoundType.ButtonClick);
+
         if (_stats.CurrentShuffles.Value > 0)
         {
             YG2.saves.Shuffles--;

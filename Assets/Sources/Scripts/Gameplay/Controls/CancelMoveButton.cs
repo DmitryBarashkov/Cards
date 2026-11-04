@@ -10,6 +10,8 @@ public class CancelMoveButton : UIButton
 
     public override void HandleClick()
     {
+        _audioService.PlaySound(SoundType.ButtonClick);
+
         if (_bank.CanUseCancel == false)
             return;
 

@@ -13,6 +13,11 @@ public class SoundButton : UIButton
     {
         base.OnEnable();
 
+        SetState();
+    }
+
+    public void SetState()
+    {
         _isOn = _audioService.GetSoundOn();
         SetSprite();
     }

@@ -10,6 +10,7 @@ public class BuyForCoinsButton : ToggleButton
     {
         int count = _type == ControlType.Cancels ? 3 : 1;
 
+        _audioService.PlaySound(SoundType.ButtonClick);
         _service.PurchaseControl(_type, count);
     }
 

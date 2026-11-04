@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
 using Zenject;
-using static Cards.UI.UIScreen;
 
 namespace Cards.Gameplay
 {
@@ -17,6 +16,7 @@ namespace Cards.Gameplay
         [Inject] private Level _level;
         [Inject] private Field _field;
         [Inject] private CardFactory _factory;
+        [Inject] private IAudioService _audioService;
 
         private List<Card> _cards = new ();
 
@@ -143,6 +143,8 @@ namespace Cards.Gameplay
             _mainSequence.OnComplete(async () =>
             {
                 await SequenceCallback();
+
+                _audioService.PlaySound(SoundType.CardBlow);
 
                 _state.CardsCount.Value -= _similarCount;
             });

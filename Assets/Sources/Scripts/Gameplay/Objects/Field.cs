@@ -14,28 +14,34 @@ namespace Cards.Gameplay
         [SerializeField] private ClearContainer _clearContainer;
         [SerializeField] private RectTransform _background;
         [SerializeField] private RectTransform _cardsContainer;
+        [SerializeField] private float _shuffleDuration = 0.5f;
+        [SerializeField] private Ease _shuffleEaseType = Ease.OutQuad;
 
         private CardsDatabase _database;
         private CardFactory _factory;
         private Card _card;
         private InputService _input;
         private UIService _uiService;
+        private IAudioService _audioService;
 
         private int _centerCoefficient = 2;
         private float _sizeMultiplier = 0.85f;
 
-        private float _shuffleDuration = 0.5f;
-        private Ease _shuffleEaseType = Ease.OutQuad;
-
         public int CardsCount => _activeCards.Count;
 
         [Inject]
-        public void Construct(CardsDatabase database, CardFactory factory, InputService input, UIService uiService)
+        public void Construct(
+            CardsDatabase database,
+            CardFactory factory,
+            InputService input,
+            UIService uiService,
+            IAudioService audioService)
         {
             _database = database;
             _factory = factory;
             _input = input;
             _uiService = uiService;
+            _audioService = audioService;
         }
 
         private void OnEnable()
@@ -153,6 +159,8 @@ namespace Cards.Gameplay
             }
 
             Sequence shuffleSequence = DOTween.Sequence();
+
+            _audioService.PlaySound(SoundType.Shuffle);
 
             for (int i = 0; i < childCount; i++)
             {

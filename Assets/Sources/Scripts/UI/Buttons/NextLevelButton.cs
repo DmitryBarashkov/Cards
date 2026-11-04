@@ -1,7 +1,6 @@
 using Cards.Gameplay;
 using Cards.UI;
 using UnityEngine;
-using YG;
 using Zenject;
 
 public class NextLevelButton : UIButton
@@ -12,6 +11,7 @@ public class NextLevelButton : UIButton
 
     public override void HandleClick()
     {
+        _audioService.PlaySound(SoundType.ButtonClick);
         _level.StartNextLevel();
         _screen.Close();
     }

@@ -7,10 +7,18 @@ using Zenject;
 public enum SoundType
 {
     BackgroundMusic,
+
     ButtonClick,
     ExpandPanel,
     Win,
-    Lose,
+
+    CardClick,
+    CardBlocked,
+    CardMove,
+    CardSetBank,
+    CardBlow,
+
+    Shuffle,
 }
 
 public class AudioService : MonoBehaviour, IAudioService

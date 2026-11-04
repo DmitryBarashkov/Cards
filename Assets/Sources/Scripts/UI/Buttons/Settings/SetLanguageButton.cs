@@ -21,6 +21,7 @@ public class SetLanguageButton : UIButton
     {
         YG2.SwitchLanguage(_language);
 
+        _audioService.PlaySound(SoundType.ButtonClick);
         _panel.ChangeLanguage(_language);
         _panel.ToggleMenu();
     }

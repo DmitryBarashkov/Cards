@@ -10,6 +10,8 @@ public class ClearBankButton : UIButton
 
     public override void HandleClick()
     {
+        _audioService.PlaySound(SoundType.ButtonClick);
+
         if (_bank.CanUseCleaning == false)
             return;
 

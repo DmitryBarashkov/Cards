@@ -14,7 +14,7 @@ namespace Cards.Gameplay
         private UIService _uiService;
         private LoadLevelService _loadLevelService;
         private AdService _adService;
-
+        private IAudioService _audioService;
         private int _levelCardsCount;
         private int _levelNumber;
 
@@ -33,6 +33,7 @@ namespace Cards.Gameplay
             Bank bank,
             UIService uiService,
             AdService adService,
+            IAudioService audioService,
             int levelNumber)
         {
             _state = state;
@@ -43,6 +44,7 @@ namespace Cards.Gameplay
             _uiService = uiService;
             _loadLevelService = loadLevelService;
             _adService = adService;
+            _audioService = audioService;
 
             _levelNumber = levelNumber;
 
@@ -75,6 +77,7 @@ namespace Cards.Gameplay
 
         public void ShowWinScreen()
         {
+            _audioService.PlaySound(SoundType.Win);
             _isActive = false;
             _uiService.ShowEndGameScreen(true);
         }
@@ -93,6 +96,7 @@ namespace Cards.Gameplay
             LevelConfig config = _loadLevelService.GetLevelConfig();
 
             _generator.SetGeneratorParams(config);
+
             var levelCardList = config.LevelDifficulty == Difficulty.Hard
                 ? _generator.GenerateHard()
                 : _generator.GenerateEasyMedium();

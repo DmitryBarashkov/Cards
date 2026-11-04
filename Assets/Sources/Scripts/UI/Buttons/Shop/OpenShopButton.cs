@@ -6,6 +6,7 @@ public class OpenShopButton : UIButton
 
     public override void HandleClick()
     {
+        _audioService.PlaySound(SoundType.ButtonClick);
         _shopService.ShowShopScreen();
     }
 }

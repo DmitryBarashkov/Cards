@@ -176,7 +176,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _sfxSource: {fileID: 5521079941915486265}
   _musicSource: {fileID: 4142576474829603676}
-  _sounds: []
+  _sounds:
+  - Type: 0
+    Clip: {fileID: 0}
+  - Type: 1
+    Clip: {fileID: 8300000, guid: d48dc73b9a0dd114ba9e791cc02e78fb, type: 3}
+  - Type: 2
+    Clip: {fileID: 8300000, guid: aa16ad8d92de47f4f83e770cd5a0071d, type: 3}
 --- !u!1 &2214820126458664405
 GameObject:
   m_ObjectHideFlags: 0

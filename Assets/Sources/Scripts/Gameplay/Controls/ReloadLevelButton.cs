@@ -10,6 +10,7 @@ public class ReloadLevelButton : UIButton
 
     public override void HandleClick()
     {
+        _audioService.PlaySound(SoundType.ButtonClick);
         _level.Restart();
 
         if (_screen != null)

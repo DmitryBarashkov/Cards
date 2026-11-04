@@ -59,9 +59,14 @@ namespace Cards.Gameplay
         public override void HandleClick()
         {
             if (_field.IsCardOverlapped(this))
+            {
                 _rectTransform.DOShakeAnchorPos(_shakeDuration, _shakeStrength, _vibrato, _randomness, _snapping, _fadeOut, _shakeRandomnessMode);
+                _audioService.PlaySound(SoundType.CardBlocked);
+            }
             else
+            {
                 ExecuteCardAction();
+            }
         }
 
         public void InitializeCardData(CardType cardType)
@@ -105,8 +110,10 @@ namespace Cards.Gameplay
             {
                 _moveEffect.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
                 _moveEffect.Play();
+                _audioService.PlaySound(SoundType.CardClick);
 
                 _field.DeleteCard(this);
+
                 MoveToBank();
             }
         }
@@ -122,6 +129,7 @@ namespace Cards.Gameplay
             _initialPosition = transform.position;
             _rectTransform.SetParent(_gameplayContainer.transform);
 
+            _audioService.PlaySound(SoundType.CardMove);
             _rectTransform.DOMove(emptyCellTransform.position, _moveDuration)
                 .SetEase(Ease.OutQuad)
                 .OnUpdate(() =>
@@ -142,6 +150,7 @@ namespace Cards.Gameplay
                     _moveEffect.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
                     _rectTransform.SetParent(emptyCellTransform);
 
+                    _audioService.PlaySound(SoundType.CardSetBank);
                     PerformBankInstallAnimation();
 
                     _bank.CheckSimilarCards();

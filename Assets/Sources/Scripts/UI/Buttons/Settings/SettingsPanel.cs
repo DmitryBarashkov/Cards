@@ -6,6 +6,7 @@ public class SettingsPanel : MonoBehaviour
 {
     [SerializeField] private RectTransform _gearIcon;
     [SerializeField] private CanvasGroup _canvasGroup;
+    [SerializeField] private SoundButton _soundButton;
 
     [Inject] private AudioService _audioService;
 
@@ -42,10 +43,12 @@ public class SettingsPanel : MonoBehaviour
         if (_gearIcon != null)
             _gearIcon.DOKill();
 
-        if (!_isOpen)
+        if (_isOpen == false)
         {
             _rectTransform.DOSizeDelta(new Vector2(_rectTransform.sizeDelta.x, _expandedHeight), _duration).SetEase(_easeType);
             _canvasGroup.DOFade(1f, _duration);
+
+            _soundButton.SetState();
 
             if (_gearIcon != null)
                 _gearIcon.DORotate(new Vector3(0, 0, -360f), _duration, RotateMode.FastBeyond360);
