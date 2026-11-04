@@ -2,6 +2,7 @@ using Cards.Gameplay;
 using Cards.Services;
 using Cards.UI;
 using TMPro;
+using UI;
 using UnityEngine;
 using YG;
 using Zenject;
@@ -27,6 +28,7 @@ namespace Cards.Installers
         [SerializeField] private Transform _shopContainer;
         [SerializeField] private Transform _generateLevelContainer;
         [SerializeField] private GameplayContainer _gameplayContainer;
+        [SerializeField] private RectTransform _uiRoot;
 
         [Header("Сервисы")]
         [SerializeField] private GameObject _advCountContainer;
@@ -79,6 +81,11 @@ namespace Cards.Installers
 
             Container.BindInterfacesAndSelfTo<UIService>()
                 .AsSingle()
+                .NonLazy();
+
+            Container.BindInterfacesAndSelfTo<SizeAdapter>()
+                .AsSingle()
+                .WithArguments(_uiRoot)
                 .NonLazy();
 
             Container.BindInstance(_advCountContainer).WithId("AdWarning");

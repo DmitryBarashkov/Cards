@@ -17,6 +17,7 @@ namespace Cards.Gameplay
 
         private CardsDatabase _database;
         private CardFactory _factory;
+        private Card _card;
         private InputService _input;
         private UIService _uiService;
 
@@ -185,11 +186,22 @@ namespace Cards.Gameplay
 
         private void GenerateCards(List<CardNode> nodes)
         {
-            nodes.Sort((a, b) => a.GridPosition.z.CompareTo(b.GridPosition.z));
+            nodes.Sort((a, b) =>
+            {
+                int zCompare = a.GridPosition.z.CompareTo(b.GridPosition.z);
 
-            float width = _factory.GetWidth();
-            float height = _factory.GetHeight();
-            float layerVisualShiftY = height * 0.2f;
+                if (zCompare != 0)
+                    return zCompare;
+
+                return b.GridPosition.y.CompareTo(a.GridPosition.y);
+            });
+
+            float width = _factory.Width;
+            float height = _factory.Height;
+            float pureWidth = _factory.PureWidth;
+            float pureHeight = _factory.PureHeight;
+
+            float layerVisualShiftY = pureHeight * 0.2f;
             float minX = float.MaxValue;
             float maxX = float.MinValue;
             float minY = float.MaxValue;
@@ -197,7 +209,7 @@ namespace Cards.Gameplay
 
             foreach (var node in nodes)
             {
-                Vector2 uiPos = GetCanvasPosition(node, width, height);
+                Vector2 uiPos = GetCanvasPosition(node, pureWidth, pureHeight);
 
                 uiPos.y += node.GridPosition.z * layerVisualShiftY;
 
@@ -222,7 +234,7 @@ namespace Cards.Gameplay
 
                 if (cardRect != null)
                 {
-                    Vector2 uiPos = GetCanvasPosition(node, width, height);
+                    Vector2 uiPos = GetCanvasPosition(node, pureWidth, pureHeight);
 
                     uiPos.y += node.GridPosition.z * layerVisualShiftY;
 
@@ -231,10 +243,13 @@ namespace Cards.Gameplay
                     cardRect.anchoredPosition = uiPos - centerOffset;
                     cardRect.anchoredPosition3D = new Vector3(cardRect.anchoredPosition.x, cardRect.anchoredPosition.y, -node.GridPosition.z * 0.1f);
 
-                    foreach (RectTransform child in cardRect)
+                    foreach (var child in cardRect)
                     {
-                        child.localScale = Vector3.one;
-                        child.localPosition = new Vector3(child.localPosition.x, child.localPosition.y, 0f);
+                        if (child is RectTransform rect)
+                        {
+                            rect.localScale = Vector3.one;
+                            rect.localPosition = new Vector3(rect.localPosition.x, rect.localPosition.y, 0f);
+                        }
                     }
 
                     if (_database.TryGetCard(node.CardTypeId, out CardType cardType))
@@ -292,11 +307,12 @@ namespace Cards.Gameplay
 
                 foreach (Card card in _activeCards)
                 {
-                    RectTransform rTransform = card.GetComponent<RectTransform>();
-                    if (rTransform == null)
+                    RectTransform rectTransform = card.GetComponent<RectTransform>();
+
+                    if (rectTransform == null)
                         continue;
 
-                    Vector2 pos = rTransform.anchoredPosition;
+                    Vector2 pos = rectTransform.anchoredPosition;
 
                     if (pos.x < minTileX)
                         minTileX = pos.x;

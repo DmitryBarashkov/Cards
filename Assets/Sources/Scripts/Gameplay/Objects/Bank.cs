@@ -46,7 +46,7 @@ namespace Cards.Gameplay
         private void Awake()
         {
             _rectTransform = GetComponent<RectTransform>();
-            _rectTransform.sizeDelta = new Vector2(_rectTransform.sizeDelta.x, _factory.GetHeight() * 1.5f);
+            _rectTransform.sizeDelta = new Vector2(_rectTransform.sizeDelta.x, _factory.PureHeight * 1.5f);
         }
 
         public void AddNewCard(Card card)

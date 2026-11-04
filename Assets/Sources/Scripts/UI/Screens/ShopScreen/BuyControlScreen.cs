@@ -8,7 +8,7 @@ using Zenject;
 
 public class BuyControlScreen : UIScreen
 {
-    public List<ControlSprite> Sprites;
+    [SerializeField] private List<ControlSprite> _sprites;
     [SerializeField] private Image _controlIcon;
     [SerializeField] private BuyForCoinsButton _buyForCoinsButton;
     [SerializeField] private BuyByAdsButton _buyForAdsButton;
@@ -33,7 +33,7 @@ public class BuyControlScreen : UIScreen
 
     private bool TryGetSprite(ControlType type, out Sprite result)
     {
-        foreach (var item in Sprites)
+        foreach (var item in _sprites)
         {
             if (item.Type == type)
             {

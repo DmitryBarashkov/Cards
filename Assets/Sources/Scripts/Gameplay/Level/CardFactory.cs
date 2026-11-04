@@ -9,11 +9,17 @@ namespace Cards.Gameplay
 {
     public class CardFactory
     {
+        private const float ContainerWidthOffset = 5;
+        private const float ContainerHeightOffset = 20;
+
         private readonly DiContainer _container;
         private readonly CardsDatabase _database;
         private Card _prefab;
+
         private float _width;
         private float _height;
+        private float _pureWidth;
+        private float _pureHeight;
 
         public CardFactory(DiContainer container, CardsDatabase database, Card prefab)
         {
@@ -21,11 +27,16 @@ namespace Cards.Gameplay
             _database = database;
             _prefab = prefab;
 
-            RectTransform rectTransform = _prefab.GetComponent<RectTransform>();
-
-            _width = rectTransform.sizeDelta.x;
-            _height = rectTransform.sizeDelta.y;
+            SetCardSizes();
         }
+
+        public float Width => _width;
+
+        public float Height => _height;
+
+        public float PureWidth => _pureWidth;
+
+        public float PureHeight => _pureHeight;
 
         public Card Create(int id, Transform parent)
         {
@@ -39,14 +50,14 @@ namespace Cards.Gameplay
             return null;
         }
 
-        public float GetWidth()
+        private void SetCardSizes()
         {
-            return _width;
-        }
+            RectTransform rectTransform = _prefab.GetComponent<RectTransform>();
 
-        public float GetHeight()
-        {
-            return _height;
+            _width = rectTransform.sizeDelta.x;
+            _height = rectTransform.sizeDelta.y;
+            _pureWidth = _width - ContainerWidthOffset;
+            _pureHeight = _height - ContainerHeightOffset;
         }
     }
 }
