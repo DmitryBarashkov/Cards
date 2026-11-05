@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2210075399117883418}
   - component: {fileID: 4298170054666785839}
   - component: {fileID: 7270530670483189822}
-  - component: {fileID: 4341572329525716300}
+  - component: {fileID: 1649810573402911510}
   m_Layer: 0
   m_Name: MoveEffect
   m_TagString: Untagged
@@ -58,7 +58,7 @@ ParticleSystem:
   lengthInSec: 0.4
   simulationSpeed: 1
   stopAction: 0
-  cullingMode: 0
+  cullingMode: 3
   ringBufferMode: 0
   ringBufferLoopRange: {x: 0, y: 1}
   emitterVelocityMode: 1
@@ -183,7 +183,7 @@ ParticleSystem:
     startSpeed:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 80
+      scalar: 60
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -4791,7 +4791,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 24805410274714b9c823ecf120987af5, type: 2}
+  - {fileID: 2100000, guid: fe1e304ea15d24887bbe097b012a36f3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4844,7 +4844,7 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
---- !u!114 &4341572329525716300
+--- !u!114 &1649810573402911510
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -4853,19 +4853,33 @@ MonoBehaviour:
   m_GameObject: {fileID: 1792883096050056654}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 022f88edfdfa44b65afcefde3c9d854e, type: 3}
+  m_Script: {fileID: 11500000, guid: 16f0b0b6d0b7542bfbd20a3e05b04ff1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 2100000, guid: fe1e304ea15d24887bbe097b012a36f3, type: 2}
+  m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 0
+  m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  fixedTime: 1
-  use3dRotation: 0
+  m_IsTrail: 0
+  m_IgnoreCanvasScaler: 0
+  m_AbsoluteMode: 0
+  m_Scale3D: {x: 0.04, y: 0.04, z: 0.04}
+  m_AnimatableProperties: []
+  m_Particles:
+  - {fileID: 4298170054666785839}
+  m_MeshSharing: 0
+  m_GroupId: 0
+  m_GroupMaxId: 0
+  m_PositionMode: 0
+  m_AutoScaling: 0
+  m_AutoScalingMode: 1
+  m_UseCustomView: 0
+  m_CustomViewSize: 10
+  m_TimeScaleMultiplier: 1
 --- !u!1 &4025933835392676788
 GameObject:
   m_ObjectHideFlags: 0

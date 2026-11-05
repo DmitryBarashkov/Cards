@@ -4250,6 +4250,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _gearIcon: {fileID: 1955935709}
   _canvasGroup: {fileID: 2130452728}
+  _soundButton: {fileID: 161045668}
 --- !u!114 &1438847311
 MonoBehaviour:
   m_ObjectHideFlags: 0
