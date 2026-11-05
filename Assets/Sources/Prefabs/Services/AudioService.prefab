@@ -180,9 +180,21 @@ MonoBehaviour:
   - Type: 0
     Clip: {fileID: 0}
   - Type: 1
-    Clip: {fileID: 8300000, guid: d48dc73b9a0dd114ba9e791cc02e78fb, type: 3}
+    Clip: {fileID: 8300000, guid: ad304dee53a088f41896d11939792093, type: 3}
   - Type: 2
-    Clip: {fileID: 8300000, guid: aa16ad8d92de47f4f83e770cd5a0071d, type: 3}
+    Clip: {fileID: 8300000, guid: 669dcde39f6d89f4f9424b7845edcef3, type: 3}
+  - Type: 3
+    Clip: {fileID: 8300000, guid: 78768038ea8b93d4da54c21ff8669f31, type: 3}
+  - Type: 4
+    Clip: {fileID: 0}
+  - Type: 5
+    Clip: {fileID: 8300000, guid: ea2db258ba8075141bd5b9f1dabb1bbb, type: 3}
+  - Type: 6
+    Clip: {fileID: 8300000, guid: 4aa045ccfedf774469206e167281f4a9, type: 3}
+  - Type: 8
+    Clip: {fileID: 8300000, guid: b84e9d347be4bd1479526ee96621004e, type: 3}
+  - Type: 9
+    Clip: {fileID: 8300000, guid: 5f46b7d16f817df4b96dea727f665d0b, type: 3}
 --- !u!1 &2214820126458664405
 GameObject:
   m_ObjectHideFlags: 0

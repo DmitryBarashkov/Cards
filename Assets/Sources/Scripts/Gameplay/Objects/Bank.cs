@@ -140,11 +140,11 @@ namespace Cards.Gameplay
                 _mainSequence.Insert(_duration, cardTransform.DOScale(_downScale, _duration).SetEase(Ease.InQuad));
             }
 
+            _audioService.PlaySound(SoundType.CardBlow);
+
             _mainSequence.OnComplete(async () =>
             {
                 await SequenceCallback();
-
-                _audioService.PlaySound(SoundType.CardBlow);
 
                 _state.CardsCount.Value -= _similarCount;
             });
