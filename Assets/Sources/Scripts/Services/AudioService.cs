@@ -36,6 +36,8 @@ public class AudioService : MonoBehaviour, IAudioService
     public void Construct()
     {
         _isSoundOn = YG2.saves.IsSoundOn;
+
+        Activate();
     }
 
     public void Activate()

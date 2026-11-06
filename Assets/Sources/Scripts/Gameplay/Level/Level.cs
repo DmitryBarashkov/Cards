@@ -1,6 +1,5 @@
 using Cards.Databases;
 using Cards.Services;
-using YG;
 using Zenject;
 
 namespace Cards.Gameplay
