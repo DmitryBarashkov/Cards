@@ -1,9 +1,11 @@
 using Cards.Gameplay;
 using Cards.Services;
 using Cards.UI;
+using System.Collections.Generic;
 using TMPro;
 using UI;
 using UnityEngine;
+using UnityEngine.UI;
 using YG;
 using Zenject;
 
@@ -33,6 +35,9 @@ namespace Cards.Installers
         [Header("Сервисы")]
         [SerializeField] private GameObject _advCountContainer;
         [SerializeField] private TextMeshProUGUI _advCountText;
+
+        [Header("Канвасы")]
+        [SerializeField] private List<CanvasScaler> _canvasScalers;
 
         private int _coins;
         private int _shuffles;
@@ -85,7 +90,7 @@ namespace Cards.Installers
 
             Container.BindInterfacesAndSelfTo<SizeAdapter>()
                 .AsSingle()
-                .WithArguments(_uiRoot)
+                .WithArguments(_uiRoot, _canvasScalers)
                 .NonLazy();
 
             Container.BindInstance(_advCountContainer).WithId("AdWarning");

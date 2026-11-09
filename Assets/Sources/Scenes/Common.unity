@@ -2027,7 +2027,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.09772159, g: 0.33962262, b: 0.30166766, a: 0.9411765}
+  m_Color: {r: 0.007843138, g: 0.15294118, b: 0.09803922, a: 0.9411765}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -2290,7 +2290,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 5d51b21a813c1344c8b370328c5980e2, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 97f726b9a33e33a42a30ce6399098a66, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -3754,6 +3754,12 @@ MonoBehaviour:
   _uiRoot: {fileID: 700958854}
   _advCountContainer: {fileID: 830769584}
   _advCountText: {fileID: 2142569178}
+  _canvasScalers:
+  - {fileID: 500758028111497782}
+  - {fileID: 1052907716}
+  - {fileID: 1543698009}
+  - {fileID: 1654051126}
+  - {fileID: 1049943845}
 --- !u!1 &1254052543
 GameObject:
   m_ObjectHideFlags: 0
